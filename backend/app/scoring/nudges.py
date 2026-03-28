@@ -10,6 +10,7 @@ Nudges are supportive, not clinical. Izzat (family honor) is respected in
 financial nudges — scripts acknowledge obligation while suggesting sustainable limits.
 """
 
+from __future__ import annotations
 from app.models.schemas import Nudge
 
 # ---------------------------------------------------------------------------

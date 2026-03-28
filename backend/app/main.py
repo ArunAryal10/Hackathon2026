@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.routers import score, demo
+from app.routers import score, demo, resources
 
 
 class UTF8JSONResponse(JSONResponse):
@@ -22,6 +22,7 @@ app.add_middleware(
 
 app.include_router(score.router)
 app.include_router(demo.router)
+app.include_router(resources.router, prefix="/api")
 
 
 @app.get("/health")

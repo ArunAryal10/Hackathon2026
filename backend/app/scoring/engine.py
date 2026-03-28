@@ -10,6 +10,8 @@ Weights:
   Self-report 15%
 """
 
+from __future__ import annotations
+
 import numpy as np
 
 from .hrv import score_hrv_sleep
