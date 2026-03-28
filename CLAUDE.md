@@ -120,12 +120,12 @@ Returns full pre-populated score response for `profile_a` or `profile_b`. Used b
 
 ## Scoring weights (MVP)
 
-| Component | Weight |
-|-----------|--------|
-| Financial | 40% |
-| HRV | 25% |
-| Sleep | 20% |
-| Self-report | 15% |
+| Component | Weight | Rationale |
+|-----------|--------|-----------|
+| Financial | 40% | Dominant stressor for Nepali diaspora; remittance burden is culturally unique |
+| HRV + Sleep | 25% | Combined physiological signal (hrv.py handles internal HRV/sleep weighting) |
+| Behavioral | 20% | Screen time, steps, exercise — modifiable lifestyle factors |
+| Self-report | 15% | Subjective but important; validates objective signals |
 
 K6 band mapping: 0–25 → low, 26–50 → moderate, 51–75 → high, 76–100 → severe.
 
