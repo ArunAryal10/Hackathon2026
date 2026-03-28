@@ -2,11 +2,36 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
-const INITIAL = {
-  hrv_sleep: { rmssd_ms: '', sleep_duration_hrs: '', sleep_efficiency_pct: '' },
-  financial: { monthly_income_usd: '', monthly_remittance_usd: '', total_debt_usd: '', income_stability: 0.7 },
-  behavioral: { screen_time_hrs: '', steps_per_day: '', exercise_mins_per_week: '' },
-  self_report: { stress_rating: 5, mood_rating: 5 },
+// Synthetic "today's data" — simulates auto-sync from wearable + phone
+// In production these would come from HealthKit / Google Fit / Screen Time APIs
+const TODAY = {
+  hrv_sleep: { rmssd_ms: 34, sleep_duration_hrs: 6.5, sleep_efficiency_pct: 76 },
+  financial: { monthly_income_usd: 2800, monthly_remittance_usd: 560, total_debt_usd: 7500, income_stability: 0.6 },
+  behavioral: { screen_time_hrs: 6.5, steps_per_day: 4200, exercise_mins_per_week: 45 },
+  self_report: { stress_rating: 6, mood_rating: 5 },
+}
+
+// Previous day's data — shown as trend comparison
+const YESTERDAY = {
+  hrv_sleep: { rmssd_ms: 41, sleep_duration_hrs: 7.0, sleep_efficiency_pct: 82 },
+  behavioral: { screen_time_hrs: 5.0, steps_per_day: 6100, exercise_mins_per_week: 45 },
+}
+
+function trend(today, yesterday) {
+  const diff = today - yesterday
+  if (Math.abs(diff) < 0.5) return null
+  return diff > 0 ? 'up' : 'down'
+}
+
+function TrendBadge({ today, yesterday, higherIsBad = true }) {
+  const dir = trend(today, yesterday)
+  if (!dir) return null
+  const bad = (dir === 'up' && higherIsBad) || (dir === 'down' && !higherIsBad)
+  return (
+    <span className={`ml-2 text-xs px-1.5 py-0.5 rounded font-medium ${bad ? 'bg-red-900/40 text-red-400' : 'bg-green-900/40 text-green-400'}`}>
+      {dir === 'up' ? '↑' : '↓'} vs yesterday
+    </span>
+  )
 }
 
 function Field({ label, hint, children }) {
@@ -54,19 +79,22 @@ function RangeField({ label, hint, value, onChange, min, max, step = 1, leftLabe
   )
 }
 
-function Section({ title, emoji, children }) {
+function Section({ title, emoji, source, children }) {
   return (
     <div className="bg-gray-900 rounded-2xl p-6 mb-6 border border-gray-800">
-      <h2 className="text-lg font-semibold text-white mb-5">
-        <span className="mr-2">{emoji}</span>{title}
-      </h2>
+      <div className="flex items-center justify-between mb-5">
+        <h2 className="text-lg font-semibold text-white">
+          <span className="mr-2">{emoji}</span>{title}
+        </h2>
+        {source && <span className="text-xs text-gray-600 bg-gray-800 px-2 py-0.5 rounded-full">{source}</span>}
+      </div>
       {children}
     </div>
   )
 }
 
 export default function IntakePage() {
-  const [form, setForm] = useState(INITIAL)
+  const [form, setForm] = useState(TODAY)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const navigate = useNavigate()
@@ -131,9 +159,13 @@ export default function IntakePage() {
       <div className="max-w-2xl mx-auto">
 
         {/* Header */}
-        <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-white mb-2">MannChill</h1>
-          <p className="text-gray-400 text-sm">Enter your data to calculate your allostatic load score.</p>
+        <div className="mb-6 text-center">
+          <h1 className="text-3xl font-bold text-white mb-2">Today's Data</h1>
+          <div className="flex items-center justify-center gap-2 text-xs text-gray-500">
+            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse inline-block" />
+            <span>Auto-synced · {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}</span>
+          </div>
+          <p className="text-gray-600 text-xs mt-1">Sources: Apple Health · Screen Time · Manual</p>
         </div>
 
         {/* Demo shortcuts */}
@@ -160,7 +192,7 @@ export default function IntakePage() {
         <form onSubmit={handleSubmit}>
 
           {/* Financial */}
-          <Section title="Financial" emoji="💸">
+          <Section title="Financial" emoji="💸" source="Manual">
             <Field label="Monthly income (USD)" hint="Your gross monthly income before remittance">
               <Input value={form.financial.monthly_income_usd} placeholder="e.g. 2500"
                 onChange={e => set('financial', 'monthly_income_usd', e.target.value)} />
@@ -184,32 +216,32 @@ export default function IntakePage() {
           </Section>
 
           {/* HRV + Sleep */}
-          <Section title="HRV & Sleep" emoji="💓">
-            <Field label="HRV — RMSSD (ms)" hint="Check your wearable app (Apple Health, Garmin, Fitbit). Typical range: 20–80ms.">
+          <Section title="HRV & Sleep" emoji="💓" source="Apple Health">
+            <Field label={<>HRV — RMSSD (ms) <TrendBadge today={form.hrv_sleep.rmssd_ms} yesterday={YESTERDAY.hrv_sleep.rmssd_ms} higherIsBad={false} /></>}>
               <Input value={form.hrv_sleep.rmssd_ms} placeholder="e.g. 38"
                 onChange={e => set('hrv_sleep', 'rmssd_ms', e.target.value)} />
             </Field>
-            <Field label="Sleep duration (hours)" hint="Average hours of sleep per night this week">
+            <Field label={<>Sleep duration (hours) <TrendBadge today={form.hrv_sleep.sleep_duration_hrs} yesterday={YESTERDAY.hrv_sleep.sleep_duration_hrs} higherIsBad={false} /></>}>
               <Input value={form.hrv_sleep.sleep_duration_hrs} placeholder="e.g. 7" min={0} max={24} step={0.5}
                 onChange={e => set('hrv_sleep', 'sleep_duration_hrs', e.target.value)} />
             </Field>
-            <Field label="Sleep efficiency (%)" hint="% of time in bed actually asleep. Check your wearable or estimate.">
+            <Field label={<>Sleep efficiency (%) <TrendBadge today={form.hrv_sleep.sleep_efficiency_pct} yesterday={YESTERDAY.hrv_sleep.sleep_efficiency_pct} higherIsBad={false} /></>}>
               <Input value={form.hrv_sleep.sleep_efficiency_pct} placeholder="e.g. 82" min={0} max={100}
                 onChange={e => set('hrv_sleep', 'sleep_efficiency_pct', e.target.value)} />
             </Field>
           </Section>
 
           {/* Behavioral */}
-          <Section title="Behavior & Activity" emoji="📱">
-            <Field label="Daily screen time (hours)" hint="Check phone settings → Screen Time / Digital Wellbeing">
+          <Section title="Behavior & Activity" emoji="📱" source="Screen Time">
+            <Field label={<>Daily screen time (hours) <TrendBadge today={form.behavioral.screen_time_hrs} yesterday={YESTERDAY.behavioral.screen_time_hrs} higherIsBad={true} /></>}>
               <Input value={form.behavioral.screen_time_hrs} placeholder="e.g. 6" min={0} max={24} step={0.5}
                 onChange={e => set('behavioral', 'screen_time_hrs', e.target.value)} />
             </Field>
-            <Field label="Daily steps" hint="Average steps per day this week">
+            <Field label={<>Daily steps <TrendBadge today={form.behavioral.steps_per_day} yesterday={YESTERDAY.behavioral.steps_per_day} higherIsBad={false} /></>}>
               <Input value={form.behavioral.steps_per_day} placeholder="e.g. 5000" min={0}
                 onChange={e => set('behavioral', 'steps_per_day', e.target.value)} />
             </Field>
-            <Field label="Exercise (minutes/week)" hint="Total minutes of moderate exercise per week">
+            <Field label="Exercise (minutes/week)">
               <Input value={form.behavioral.exercise_mins_per_week} placeholder="e.g. 90" min={0}
                 onChange={e => set('behavioral', 'exercise_mins_per_week', e.target.value)} />
             </Field>
