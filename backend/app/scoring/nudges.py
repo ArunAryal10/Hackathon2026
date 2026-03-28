@@ -139,7 +139,7 @@ def get_nudges(
         results.append(Nudge(category=dominant, priority=priority, message_en=msg_en, message_ne=msg_ne))
 
     # Secondary: one nudge from the next most stressed category
-    secondary_scores = {k: v for k, v in sub_scores.items() if k != dominant and v > 50}
+    secondary_scores = {k: v for k, v in sub_scores.items() if k != dominant and v > 35}
     if secondary_scores:
         secondary = max(secondary_scores, key=secondary_scores.get)
         secondary_nudges = _NUDGES.get(secondary, [])
