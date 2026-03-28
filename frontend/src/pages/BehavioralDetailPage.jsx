@@ -1,11 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom'
-
-function scoreColor(v) {
-  if (v <= 25) return '#4ade80'
-  if (v <= 50) return '#facc15'
-  if (v <= 75) return '#fb923c'
-  return '#f87171'
-}
+import { scoreColor } from '../utils/colors'
 
 function MetricBar({ icon, label, value, displayValue, max, target, targetLabel, goodDirection }) {
   // goodDirection: 'high' means more is better, 'low' means less is better

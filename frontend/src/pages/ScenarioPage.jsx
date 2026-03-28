@@ -1,20 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { scoreColor } from '../utils/colors'
 
-// Default inputs used when navigating directly from NavBar (no dashboard state)
 const DEMO_INPUTS = {
   hrv_sleep:    { rmssd_ms: 38, sleep_duration_hrs: 6.5, sleep_efficiency_pct: 78 },
   financial:    { monthly_income_usd: 2000, monthly_remittance_usd: 400, total_debt_usd: 5000, income_stability: 0.7 },
   behavioral:   { screen_time_hrs: 7, steps_per_day: 4500, exercise_mins_per_week: 60 },
   self_report:  { stress_rating: 7, mood_rating: 4 },
-}
-
-function scoreColor(v) {
-  if (v <= 25) return '#4ade80'
-  if (v <= 50) return '#facc15'
-  if (v <= 75) return '#fb923c'
-  return '#f87171'
 }
 
 function SliderField({ label, hint, value, onChange, min, max, step = 1, leftLabel, rightLabel, format }) {

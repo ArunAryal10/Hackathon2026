@@ -1,12 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts'
-
-function scoreColor(v) {
-  if (v <= 25) return '#4ade80'
-  if (v <= 50) return '#facc15'
-  if (v <= 75) return '#fb923c'
-  return '#f87171'
-}
+import { scoreColor } from '../utils/colors'
 
 function StatRow({ label, value, highlight, note }) {
   return (

@@ -2,20 +2,13 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell
 } from 'recharts'
+import { scoreColor, STRESS_COLORS } from '../utils/colors'
 
-// ─── Colour helpers ────────────────────────────────────────────────────────
 const BAND_COLORS = {
-  low:      { bg: 'bg-green-900/30',  border: 'border-green-700',  text: 'text-green-400',  hex: '#4ade80' },
-  moderate: { bg: 'bg-yellow-900/30', border: 'border-yellow-700', text: 'text-yellow-400', hex: '#facc15' },
-  high:     { bg: 'bg-orange-900/30', border: 'border-orange-700', text: 'text-orange-400', hex: '#fb923c' },
-  severe:   { bg: 'bg-red-900/30',    border: 'border-red-700',    text: 'text-red-400',    hex: '#f87171' },
-}
-
-function scoreColor(score) {
-  if (score <= 25) return '#4ade80'
-  if (score <= 50) return '#facc15'
-  if (score <= 75) return '#fb923c'
-  return '#f87171'
+  low:      { bg: 'bg-green-900/30',  border: 'border-green-700',  text: 'text-green-400',  hex: STRESS_COLORS.low },
+  moderate: { bg: 'bg-yellow-900/30', border: 'border-yellow-700', text: 'text-yellow-400', hex: STRESS_COLORS.moderate },
+  high:     { bg: 'bg-orange-900/30', border: 'border-orange-700', text: 'text-orange-400', hex: STRESS_COLORS.high },
+  severe:   { bg: 'bg-red-900/30',    border: 'border-red-700',    text: 'text-red-400',    hex: STRESS_COLORS.severe },
 }
 
 // ─── Gauge (SVG arc) ───────────────────────────────────────────────────────

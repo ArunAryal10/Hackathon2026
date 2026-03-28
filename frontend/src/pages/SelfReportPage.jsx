@@ -1,11 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom'
-
-function scoreColor(v) {
-  if (v <= 25) return '#4ade80'
-  if (v <= 50) return '#facc15'
-  if (v <= 75) return '#fb923c'
-  return '#f87171'
-}
+import { scoreColor } from '../utils/colors'
 
 function RatingDisplay({ label, value, max, lowLabel, highLabel, invert }) {
   // invert: true means high value = bad (stress), false means high value = good (mood)
