@@ -192,6 +192,29 @@ export default function DashboardPage() {
           </div>
         </div>
 
+        {/* Detail drill-downs */}
+        <div className="bg-gray-900 rounded-2xl border border-gray-800 p-5 mb-6">
+          <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-3">Explore details</h2>
+          <div className="grid grid-cols-2 gap-2">
+            {[
+              { label: '💓 HRV & Sleep', path: '/detail/hrv' },
+              { label: '💸 Financial', path: '/detail/financial' },
+              { label: '📱 Behavioral', path: '/detail/behavioral' },
+              { label: '🧠 Self-report', path: '/detail/self-report' },
+              { label: '📡 Data sources', path: '/sources' },
+              { label: '✅ Weekly routine', path: '/routine' },
+            ].map(({ label, path }) => (
+              <button
+                key={path}
+                onClick={() => navigate(path, { state })}
+                className="py-2.5 px-3 rounded-xl border border-gray-700 text-gray-300 hover:bg-gray-800 hover:border-gray-600 transition-colors text-sm text-left"
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+
         <div className="flex gap-3">
           <button
             onClick={() => navigate(`/resources/${r.band}`)}

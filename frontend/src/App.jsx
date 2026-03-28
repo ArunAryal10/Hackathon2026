@@ -3,6 +3,11 @@ import LandingPage from './pages/LandingPage'
 import IntakePage from './pages/IntakePage'
 import DashboardPage from './pages/DashboardPage'
 import ResourcesPage from './pages/ResourcesPage'
+import DataSourcesPage from './pages/DataSourcesPage'
+import HRVDetailPage from './pages/HRVDetailPage'
+import FinancialDetailPage from './pages/FinancialDetailPage'
+import BehavioralDetailPage from './pages/BehavioralDetailPage'
+import SelfReportPage from './pages/SelfReportPage'
 import RoutinePage from './pages/RoutinePage'
 import NavBar from './components/NavBar'
 
@@ -15,6 +20,11 @@ export default function App() {
           <Route path="/intake" element={<IntakePage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/resources/:band" element={<ResourcesPage />} />
+          <Route path="/sources" element={<DataSourcesPage />} />
+          <Route path="/detail/hrv" element={<HRVDetailPage />} />
+          <Route path="/detail/financial" element={<FinancialDetailPage />} />
+          <Route path="/detail/behavioral" element={<BehavioralDetailPage />} />
+          <Route path="/detail/self-report" element={<SelfReportPage />} />
           <Route path="/routine" element={<RoutinePage />} />
         </Routes>
       </div>
