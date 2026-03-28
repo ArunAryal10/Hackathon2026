@@ -22,4 +22,4 @@ class ScenarioResponse(ScoreResponse):
 def scenario(req: ScenarioRequest) -> ScenarioResponse:
     result = compute_score(req.inputs)
     delta = round(result.allostatic_load - req.original_score, 1)
-    return ScenarioResponse(score_delta=delta, **result.dict())
+    return ScenarioResponse(score_delta=delta, **result.model_dump())
