@@ -1,5 +1,10 @@
 # Virtual environment
 hackathon2026/
+venv/
+
+# Node
+frontend/node_modules/
+frontend/dist/
 
 # Python
 __pycache__/
