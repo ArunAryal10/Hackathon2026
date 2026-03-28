@@ -55,6 +55,18 @@ def _dominant_stressor(sub_scores: dict[str, float]) -> str:
 
 
 def compute_score(req: ScoreRequest) -> ScoreResponse:
+    # Use caller-supplied weights if provided, else defaults
+    if req.weights:
+        w = req.weights
+        weights = {
+            "financial":   w.financial   if w.financial   is not None else WEIGHTS["financial"],
+            "hrv_sleep":   w.hrv_sleep   if w.hrv_sleep   is not None else WEIGHTS["hrv_sleep"],
+            "behavioral":  w.behavioral  if w.behavioral  is not None else WEIGHTS["behavioral"],
+            "self_report": w.self_report if w.self_report is not None else WEIGHTS["self_report"],
+        }
+    else:
+        weights = WEIGHTS
+
     hrv_sleep = score_hrv_sleep(
         req.hrv_sleep.rmssd_ms,
         req.hrv_sleep.sleep_duration_hrs,
@@ -83,11 +95,12 @@ def compute_score(req: ScoreRequest) -> ScoreResponse:
         "self_report": self_report,
     }
 
-    composite = sum(sub[k] * WEIGHTS[k] for k in WEIGHTS)
+    composite = sum(sub[k] * weights[k] for k in weights)
     composite = float(np.clip(composite, 0, 100))
 
     band, k6 = _band(composite)
-    dominant = _dominant_stressor(sub)
+    weighted = {k: sub[k] * weights[k] for k in weights}
+    dominant = max(weighted, key=weighted.get)
 
     from app.scoring.nudges import get_nudges
     nudges = get_nudges(dominant, band, sub)

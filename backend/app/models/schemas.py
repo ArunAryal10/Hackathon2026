@@ -26,11 +26,19 @@ class SelfReportInput(BaseModel):
     mood_rating: int = Field(..., ge=1, le=10, description="1=very low, 10=excellent")
 
 
+class WeightsInput(BaseModel):
+    hrv_sleep: Optional[float] = None
+    financial: Optional[float] = None
+    behavioral: Optional[float] = None
+    self_report: Optional[float] = None
+
+
 class ScoreRequest(BaseModel):
     hrv_sleep: HRVSleepInput
     financial: FinancialInput
     behavioral: BehavioralInput
     self_report: SelfReportInput
+    weights: Optional[WeightsInput] = None
 
 
 class SubScores(BaseModel):

@@ -83,11 +83,16 @@ export default function LandingPage() {
           </p>
         </div>
 
+        <div className="bg-gray-900 rounded-2xl border border-gray-800 p-5 mb-6 text-center">
+          <p className="text-gray-400 text-sm mb-1">Ready to understand your stress?</p>
+          <p className="text-gray-600 text-xs">Takes 2 minutes. Your data stays on your device.</p>
+        </div>
+
         <button
-          onClick={() => navigate('/intake')}
+          onClick={() => navigate('/login')}
           className="w-full py-4 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-semibold text-base transition-colors"
         >
-          Check my allostatic load →
+          Get started — create account →
         </button>
 
       </div>

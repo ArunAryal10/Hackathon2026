@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { saveScoreToHistory } from '../utils/permissions'
 
 // Synthetic "today's data" — simulates auto-sync from wearable + phone
 // In production these would come from HealthKit / Google Fit / Screen Time APIs
@@ -133,6 +134,7 @@ export default function IntakePage() {
         },
       }
       const { data } = await axios.post('/api/score', payload)
+      saveScoreToHistory(data)
       navigate('/dashboard', { state: { result: data, inputs: payload } })
     } catch (err) {
       setError(err.response?.data?.detail || 'Something went wrong. Is the backend running?')
@@ -146,6 +148,7 @@ export default function IntakePage() {
     setError(null)
     try {
       const { data } = await axios.get(`/api/demo/${profile}`)
+      saveScoreToHistory(data)
       navigate('/dashboard', { state: { result: data, demo: profile } })
     } catch (err) {
       setError('Could not load demo. Is the backend running?')
