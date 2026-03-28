@@ -9,6 +9,7 @@ import FinancialDetailPage from './pages/FinancialDetailPage'
 import BehavioralDetailPage from './pages/BehavioralDetailPage'
 import SelfReportPage from './pages/SelfReportPage'
 import RoutinePage from './pages/RoutinePage'
+import ScenarioPage from './pages/ScenarioPage'
 import NavBar from './components/NavBar'
 
 export default function App() {
@@ -26,6 +27,7 @@ export default function App() {
           <Route path="/detail/behavioral" element={<BehavioralDetailPage />} />
           <Route path="/detail/self-report" element={<SelfReportPage />} />
           <Route path="/routine" element={<RoutinePage />} />
+      <Route path="/scenario" element={<ScenarioPage />} />
         </Routes>
       </div>
       <NavBar />

@@ -5,7 +5,7 @@ const TABS = [
   { label: 'My Score',  path: '/intake',             icon: '📊' },
   { label: 'Routine',   path: '/routine',            icon: '✅' },
   { label: 'Resources', path: '/resources/moderate', icon: '🤝' },
-  { label: 'What-If',   path: '/scenario',           icon: '🎛️', comingSoon: true },
+  { label: 'What-If',   path: '/scenario',           icon: '🎛️' },
 ]
 
 export default function NavBar() {

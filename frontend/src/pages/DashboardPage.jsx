@@ -203,6 +203,7 @@ export default function DashboardPage() {
               { label: '🧠 Self-report', path: '/detail/self-report' },
               { label: '📡 Data sources', path: '/sources' },
               { label: '✅ Weekly routine', path: '/routine' },
+              { label: '🔮 What-if scenarios', path: '/scenario' },
             ].map(({ label, path }) => (
               <button
                 key={path}
