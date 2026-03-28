@@ -1,26 +1,159 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
+  AreaChart, Area, BarChart, Bar, Cell,
+  XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, ReferenceLine,
 } from 'recharts'
 import axios from 'axios'
+import { scoreColor } from '../utils/colors'
 import {
-  getLastScore, getScoreHistory, getPermissions, getWeights,
-  syntheticTrend, saveScoreToHistory, STORAGE_KEYS,
+  getLastScore, getPermissions, getWeights,
+  saveScoreToHistory, STORAGE_KEYS,
 } from '../utils/permissions'
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-function scoreColor(v) {
-  if (!v && v !== 0) return '#6b7280'
-  if (v <= 25) return '#4ade80'
-  if (v <= 50) return '#facc15'
-  if (v <= 75) return '#fb923c'
-  return '#f87171'
+// ─── Synthetic trend generators ───────────────────────────────────────────────
+function randomWalk(base, steps, maxJitter, trend = 0) {
+  let cur = base
+  return Array.from({ length: steps }, (_, i) => {
+    const drift = (i / steps) * trend
+    cur = Math.min(100, Math.max(0, base + drift + (Math.random() - 0.5) * maxJitter))
+    return Math.round(cur)
+  })
 }
 
-function bandLabel(band) {
-  return { low: 'Low', moderate: 'Moderate', high: 'High', severe: 'Severe' }[band] || '–'
+function syntheticWeek(base) {
+  const today = new Date()
+  const scores = randomWalk(base, 7, 10)
+  return scores.map((score, i) => {
+    const d = new Date(today); d.setDate(d.getDate() - (6 - i))
+    return { date: d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }), score }
+  })
+}
+
+function syntheticMonth(base) {
+  const today = new Date()
+  const scores = randomWalk(base, 30, 14, -4)
+  return scores.map((score, i) => {
+    const d = new Date(today); d.setDate(d.getDate() - (29 - i))
+    // Only label every 7th point to avoid clutter
+    const label = i % 7 === 0
+      ? d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+      : ''
+    return { date: label, score }
+  })
+}
+
+function syntheticYear(base) {
+  const today = new Date()
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+  const scores = randomWalk(base, 12, 18, -6)
+  return scores.map((score, i) => {
+    const d = new Date(today); d.setMonth(d.getMonth() - (11 - i))
+    return { date: MONTHS[d.getMonth()], score }
+  })
+}
+
+// ─── Stats row (like Garmin/Whoop) ───────────────────────────────────────────
+function TrendStats({ data }) {
+  const scores = data.map(d => d.score)
+  const min = Math.min(...scores)
+  const max = Math.max(...scores)
+  const avg = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length)
+  return (
+    <div className="grid grid-cols-3 gap-2 mt-4">
+      {[
+        { label: 'MIN', value: min, color: scoreColor(min) },
+        { label: 'AVG', value: avg, color: scoreColor(avg) },
+        { label: 'MAX', value: max, color: scoreColor(max) },
+      ].map(({ label, value, color }) => (
+        <div key={label} className="bg-gray-800/60 rounded-xl p-3 text-center">
+          <p className="text-xs text-gray-500 mb-1">{label}</p>
+          <p className="text-xl font-bold" style={{ color }}>{value}</p>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+// ─── Trend chart ─────────────────────────────────────────────────────────────
+const TABS = ['1W', '1M', '1Y']
+
+function TrendCard({ weekData, monthData, yearData }) {
+  const [tab, setTab] = useState('1W')
+
+  const data = tab === '1W' ? weekData : tab === '1M' ? monthData : yearData
+  const isYear = tab === '1Y'
+
+  const tooltipStyle = {
+    contentStyle: { background: '#111827', border: '1px solid #374151', borderRadius: 8 },
+    labelStyle: { color: '#f3f4f6', fontSize: 11 },
+    itemStyle: { color: '#a78bfa', fontSize: 11 },
+  }
+
+  return (
+    <div className="bg-gray-900 rounded-2xl border border-gray-800 p-5 mb-4">
+
+      {/* Header + tab switcher */}
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">Stress trend</h2>
+        <div className="flex bg-gray-800 rounded-lg p-0.5 gap-0.5">
+          {TABS.map(t => (
+            <button
+              key={t}
+              onClick={() => setTab(t)}
+              className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${
+                tab === t ? 'bg-purple-600 text-white' : 'text-gray-400 hover:text-gray-200'
+              }`}
+            >
+              {t}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Chart */}
+      <ResponsiveContainer width="100%" height={150}>
+        {isYear ? (
+          <BarChart data={data} margin={{ left: -15, right: 5, top: 5, bottom: 0 }} barSize={18}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" vertical={false} />
+            <XAxis dataKey="date" tick={{ fill: '#6b7280', fontSize: 10 }} axisLine={false} tickLine={false} />
+            <YAxis domain={[0, 100]} tick={{ fill: '#6b7280', fontSize: 10 }} axisLine={false} tickLine={false} />
+            <Tooltip {...tooltipStyle} cursor={{ fill: 'rgba(255,255,255,0.04)' }} />
+            <ReferenceLine y={50} stroke="#374151" strokeDasharray="3 3" />
+            <Bar dataKey="score" radius={[3, 3, 0, 0]}>
+              {data.map((d, i) => (
+                <Cell key={i} fill={scoreColor(d.score)} fillOpacity={0.85} />
+              ))}
+            </Bar>
+          </BarChart>
+        ) : (
+          <AreaChart data={data} margin={{ left: -15, right: 5, top: 5, bottom: 0 }}>
+            <defs>
+              <linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#7c3aed" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="#7c3aed" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" vertical={false} />
+            <XAxis dataKey="date" tick={{ fill: '#6b7280', fontSize: 10 }} axisLine={false} tickLine={false} />
+            <YAxis domain={[0, 100]} tick={{ fill: '#6b7280', fontSize: 10 }} axisLine={false} tickLine={false} />
+            <Tooltip {...tooltipStyle} />
+            <ReferenceLine y={50} stroke="#374151" strokeDasharray="3 3" />
+            <Area
+              type="monotone" dataKey="score"
+              stroke="#a78bfa" strokeWidth={2}
+              fill="url(#trendGrad)"
+              dot={false}
+              activeDot={{ r: 4, fill: '#c4b5fd', strokeWidth: 0 }}
+            />
+          </AreaChart>
+        )}
+      </ResponsiveContainer>
+
+      <TrendStats data={data} />
+    </div>
+  )
 }
 
 // ─── Gauge ────────────────────────────────────────────────────────────────────
@@ -71,8 +204,7 @@ function SubScoreCard({ category, score, navigate, scoreState, permitted }) {
     return (
       <div className="bg-gray-900 rounded-2xl border border-gray-800 p-4 opacity-50">
         <div className="flex items-center gap-2 mb-1">
-          <span>{meta.icon}</span>
-          <span className="text-xs text-gray-400">{meta.label}</span>
+          <span>{meta.icon}</span><span className="text-xs text-gray-400">{meta.label}</span>
         </div>
         <p className="text-xs text-gray-600">Not permitted</p>
       </div>
@@ -85,8 +217,7 @@ function SubScoreCard({ category, score, navigate, scoreState, permitted }) {
     >
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
-          <span>{meta.icon}</span>
-          <span className="text-xs text-gray-400">{meta.label}</span>
+          <span>{meta.icon}</span><span className="text-xs text-gray-400">{meta.label}</span>
         </div>
         <span className="text-lg font-bold" style={{ color }}>{Math.round(score)}</span>
       </div>
@@ -97,7 +228,7 @@ function SubScoreCard({ category, score, navigate, scoreState, permitted }) {
   )
 }
 
-// ─── HomePage ─────────────────────────────────────────────────────────────────
+// ─── Main page ────────────────────────────────────────────────────────────────
 const DEMO_INPUTS = {
   hrv_sleep:   { rmssd_ms: 38, sleep_duration_hrs: 6.5, sleep_efficiency_pct: 78 },
   financial:   { monthly_income_usd: 2000, monthly_remittance_usd: 400, total_debt_usd: 5000, income_stability: 0.7 },
@@ -105,54 +236,53 @@ const DEMO_INPUTS = {
   self_report: { stress_rating: 7, mood_rating: 4 },
 }
 
+function bandLabel(band) {
+  return { low: 'Low', moderate: 'Moderate', high: 'High', severe: 'Severe' }[band] || '–'
+}
+
 export default function HomePage() {
   const navigate = useNavigate()
   const [scoreData, setScoreData] = useState(null)
   const [scoreState, setScoreState] = useState(null)
-  const [trend, setTrend] = useState([])
+  const [trendBase, setTrendBase] = useState(null)
   const [loading, setLoading] = useState(true)
   const permissions = getPermissions()
   const weights = getWeights()
 
   useEffect(() => {
     const last = getLastScore()
-    const history = getScoreHistory()
-
     if (last) {
       setScoreData(last)
       setScoreState({ result: last, inputs: DEMO_INPUTS })
-      const trendData = history.length >= 3
-        ? history.slice(-7).map(h => ({
-            date: new Date(h.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-            score: Math.round(h.allostatic_load),
-          }))
-        : syntheticTrend(last.allostatic_load)
-      setTrend(trendData)
+      setTrendBase(last.allostatic_load)
       setLoading(false)
     } else {
-      // First visit — fetch demo baseline
-      const payload = weights
-        ? { ...DEMO_INPUTS, weights }
-        : DEMO_INPUTS
+      const payload = weights ? { ...DEMO_INPUTS, weights } : DEMO_INPUTS
       axios.post('/api/score', payload)
         .then(res => {
           saveScoreToHistory(res.data)
           setScoreData(res.data)
           setScoreState({ result: res.data, inputs: DEMO_INPUTS })
-          setTrend(syntheticTrend(res.data.allostatic_load))
+          setTrendBase(res.data.allostatic_load)
         })
         .catch(() => {
-          // Backend down fallback
-          const fallback = { allostatic_load: 62.4, band: 'high', k6_equivalent: 'moderate-severe distress',
+          const fallback = {
+            allostatic_load: 62.4, band: 'high', k6_equivalent: 'moderate-severe distress',
             sub_scores: { hrv_sleep: 55, financial: 70, behavioral: 45, self_report: 60 },
-            dominant_stressor: 'financial', nudges: [] }
+            dominant_stressor: 'financial', nudges: [],
+          }
           setScoreData(fallback)
           setScoreState({ result: fallback, inputs: DEMO_INPUTS })
-          setTrend(syntheticTrend(fallback.allostatic_load))
+          setTrendBase(fallback.allostatic_load)
         })
         .finally(() => setLoading(false))
     }
   }, [])
+
+  // Generate all three trend datasets once, when base score is known
+  const weekData  = useMemo(() => trendBase ? syntheticWeek(trendBase)  : [], [trendBase])
+  const monthData = useMemo(() => trendBase ? syntheticMonth(trendBase) : [], [trendBase])
+  const yearData  = useMemo(() => trendBase ? syntheticYear(trendBase)  : [], [trendBase])
 
   const user = (() => { try { return JSON.parse(localStorage.getItem(STORAGE_KEYS.USER)) } catch { return null } })()
   const unpermittedCount = Object.values(permissions).filter(v => !v).length
@@ -180,9 +310,7 @@ export default function HomePage() {
 
         {/* Greeting */}
         <div className="mb-6">
-          <h1 className="text-xl font-bold text-white">
-            {user ? `Hello 👋` : 'MannChill'}
-          </h1>
+          <h1 className="text-xl font-bold text-white">{user ? 'Hello 👋' : 'MannChill'}</h1>
           <p className="text-gray-500 text-sm">Here's your stress summary</p>
         </div>
 
@@ -210,31 +338,10 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* 7-day trend */}
-        <div className="bg-gray-900 rounded-2xl border border-gray-800 p-5 mb-4">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">7-day trend</h2>
-            <span className="text-xs text-gray-600">Stress load</span>
-          </div>
-          <ResponsiveContainer width="100%" height={140}>
-            <LineChart data={trend} margin={{ left: -10, right: 10, top: 5, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
-              <XAxis dataKey="date" tick={{ fill: '#6b7280', fontSize: 10 }} />
-              <YAxis domain={[0, 100]} tick={{ fill: '#6b7280', fontSize: 10 }} />
-              <Tooltip
-                contentStyle={{ background: '#111827', border: '1px solid #374151', borderRadius: 8 }}
-                labelStyle={{ color: '#f3f4f6', fontSize: 12 }}
-                itemStyle={{ color: '#a78bfa' }}
-              />
-              <ReferenceLine y={50} stroke="#374151" strokeDasharray="3 3" />
-              <Line
-                type="monotone" dataKey="score"
-                stroke="#a78bfa" strokeWidth={2} dot={{ fill: '#a78bfa', r: 3 }}
-                activeDot={{ r: 5, fill: '#c4b5fd' }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
+        {/* Multi-timeframe trend */}
+        {trendBase && (
+          <TrendCard weekData={weekData} monthData={monthData} yearData={yearData} />
+        )}
 
         {/* Sub-score cards */}
         <div className="mb-4">
@@ -285,10 +392,10 @@ export default function HomePage() {
           <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-3">Quick actions</h2>
           <div className="grid grid-cols-2 gap-2">
             {[
-              { label: '📊 Get new score',     path: '/intake' },
-              { label: '🔮 Run what-if',       path: '/scenario' },
-              { label: '🤝 View resources',    path: `/resources/${r.band}` },
-              { label: '✅ Weekly routine',    path: '/routine' },
+              { label: '📊 Get new score',  path: '/intake' },
+              { label: '🔮 Run what-if',    path: '/scenario' },
+              { label: '🤝 View resources', path: `/resources/${r.band}` },
+              { label: '✅ Weekly routine', path: '/routine' },
             ].map(({ label, path }) => (
               <button
                 key={path}
