@@ -192,12 +192,20 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <button
-          onClick={() => navigate('/intake')}
-          className="w-full py-3 rounded-xl border border-gray-700 text-gray-300 hover:bg-gray-800 transition-colors text-sm"
-        >
-          ← Recalculate with different data
-        </button>
+        <div className="flex gap-3">
+          <button
+            onClick={() => navigate(`/resources/${r.band}`)}
+            className="flex-1 py-3 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-semibold transition-colors text-sm"
+          >
+            View resources →
+          </button>
+          <button
+            onClick={() => navigate('/intake')}
+            className="flex-1 py-3 rounded-xl border border-gray-700 text-gray-300 hover:bg-gray-800 transition-colors text-sm"
+          >
+            ← Recalculate
+          </button>
+        </div>
 
       </div>
     </div>
