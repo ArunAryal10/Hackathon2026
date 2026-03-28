@@ -1,4 +1,6 @@
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { isOnboarded } from '../utils/permissions'
 
 const STATS = [
   { value: '56%', label: 'of Nepali diaspora send >20% of income as remittance' },
@@ -15,6 +17,10 @@ const PERMISSIONS = [
 
 export default function LandingPage() {
   const navigate = useNavigate()
+
+  useEffect(() => {
+    if (isOnboarded()) navigate('/home', { replace: true })
+  }, [])
 
   return (
     <div className="min-h-screen bg-gray-950 px-4 py-12">
