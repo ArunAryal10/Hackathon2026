@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import axios from 'axios'
 
 const PROMPTS = [
   'How are you feeling today?',
@@ -84,10 +85,11 @@ function scoreVoice({ pitchMean, pitchCount, rmsMean, wordsPerMin, transcript })
 }
 
 export default function VoiceJournal({ onScore }) {
-  const [phase, setPhase] = useState('idle')  // idle | recording | done
+  const [phase, setPhase] = useState('idle')  // idle | recording | analyzing | done
   const [transcript, setTranscript] = useState('')
   const [features, setFeatures] = useState(null)
   const [voiceStress, setVoiceStress] = useState(null)
+  const [llmResult, setLlmResult] = useState(null)
   const [duration, setDuration] = useState(0)
   const [promptIdx, setPromptIdx] = useState(0)
   const [supported, setSupported] = useState(true)
@@ -195,9 +197,32 @@ export default function VoiceJournal({ onScore }) {
       wordsPerMin: Math.round(wordsPerMin),
     }
     setFeatures(f)
-    const score = scoreVoice({ pitchMean, pitchCount: pitches.length, rmsMean, wordsPerMin, transcript: currentTranscript })
-    setVoiceStress(score)
-    onScore(score)
+
+    // Acoustic score (local, instant)
+    const acousticScore = scoreVoice({ pitchMean, pitchCount: pitches.length, rmsMean, wordsPerMin, transcript: currentTranscript })
+
+    // Call Gemini via backend if we have a transcript
+    setPhase('analyzing')
+    if (currentTranscript.trim().length > 3) {
+      try {
+        const { data } = await axios.post('/api/voice-analyze', {
+          transcript: currentTranscript,
+          duration_seconds: elapsed,
+        })
+        // Blend: 70% LLM score + 30% acoustic
+        const blended = Math.round((0.7 * data.stress_score + 0.3 * acousticScore) * 10) / 10
+        setLlmResult(data)
+        setVoiceStress(blended)
+        onScore(blended)
+      } catch {
+        // Backend unavailable — fall back to acoustic only
+        setVoiceStress(acousticScore)
+        onScore(acousticScore)
+      }
+    } else {
+      setVoiceStress(acousticScore)
+      onScore(acousticScore)
+    }
     setPhase('done')
   }
 
@@ -205,6 +230,7 @@ export default function VoiceJournal({ onScore }) {
     setPhase('idle')
     setFeatures(null)
     setVoiceStress(null)
+    setLlmResult(null)
     setTranscript('')
     onScore(null)
   }
@@ -231,6 +257,13 @@ export default function VoiceJournal({ onScore }) {
       >
         🎙️ Start recording
       </button>
+    </div>
+  )
+
+  if (phase === 'analyzing') return (
+    <div className="text-center py-4">
+      <div className="w-6 h-6 border-2 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+      <p className="text-sm text-gray-500">Analyzing with Gemini…</p>
     </div>
   )
 
@@ -261,18 +294,27 @@ export default function VoiceJournal({ onScore }) {
 
   // done
   const stressColor = voiceStress >= 7 ? '#f87171' : voiceStress >= 4 ? '#facc15' : '#4ade80'
+  const sentLabel = llmResult ? llmResult.sentiment : sentimentScore(transcript) > 0.55 ? 'stressed' : sentimentScore(transcript) < 0.35 ? 'calm' : 'neutral'
+  const sentColor = sentLabel === 'stressed' ? '#f87171' : sentLabel === 'calm' ? '#4ade80' : '#facc15'
+
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <p className="text-sm font-medium text-gray-700">Voice analysis complete ✓</p>
+        <div className="flex items-center gap-2">
+          <p className="text-sm font-medium text-gray-700">Voice analysis complete ✓</p>
+          {llmResult?.used_llm && (
+            <span className="text-[10px] bg-purple-100 text-purple-600 px-2 py-0.5 rounded-full font-medium">Gemini</span>
+          )}
+        </div>
         <button type="button" onClick={reset} className="text-xs text-purple-500 hover:underline">Re-record</button>
       </div>
+
       <div className="grid grid-cols-4 gap-2 mb-4">
         {[
-          { label: 'Voice stress',  value: `${voiceStress}/10`,           color: stressColor },
-          { label: 'Sentiment',     value: sentimentScore(transcript) > 0.55 ? 'Stressed' : sentimentScore(transcript) < 0.35 ? 'Calm' : 'Neutral', color: sentimentScore(transcript) > 0.55 ? '#f87171' : sentimentScore(transcript) < 0.35 ? '#4ade80' : '#facc15' },
-          { label: 'Speech rate',   value: `${features.wordsPerMin} wpm`, color: '#a78bfa' },
-          { label: 'Avg pitch',     value: `${features.pitchMean} Hz`,    color: '#a78bfa' },
+          { label: 'Voice stress', value: `${voiceStress}/10`,                color: stressColor },
+          { label: 'Sentiment',    value: sentLabel.charAt(0).toUpperCase() + sentLabel.slice(1), color: sentColor },
+          { label: 'Speech rate',  value: `${features.wordsPerMin} wpm`,      color: '#a78bfa' },
+          { label: 'Avg pitch',    value: `${features.pitchMean} Hz`,          color: '#a78bfa' },
         ].map(({ label, value, color }) => (
           <div key={label} className="bg-gray-50 rounded-xl p-3 text-center border border-gray-100">
             <p className="text-[11px] text-gray-400 mb-1">{label}</p>
@@ -280,6 +322,21 @@ export default function VoiceJournal({ onScore }) {
           </div>
         ))}
       </div>
+
+      {llmResult?.reasoning && (
+        <div className="bg-purple-50 border border-purple-100 rounded-xl px-4 py-3 mb-3">
+          <p className="text-[11px] text-purple-400 uppercase tracking-wider mb-1">Gemini analysis</p>
+          <p className="text-xs text-gray-700 leading-relaxed">{llmResult.reasoning}</p>
+          {llmResult.keywords?.length > 0 && (
+            <div className="flex flex-wrap gap-1 mt-2">
+              {llmResult.keywords.map(k => (
+                <span key={k} className="text-[10px] bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full">{k}</span>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
       {transcript && (
         <div className="bg-gray-50 rounded-xl px-4 py-3 border border-gray-100">
           <p className="text-[11px] text-gray-400 mb-1">Transcript</p>

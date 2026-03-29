@@ -21,3 +21,7 @@ build/
 
 # OS
 .DS_Store
+
+# Secrets
+.env
+backend/.env

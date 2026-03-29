@@ -1,9 +1,13 @@
 import json
+import os
+from dotenv import load_dotenv
 from fastapi import FastAPI
+
+load_dotenv()
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.routers import score, demo, resources, scenario
+from app.routers import score, demo, resources, scenario, voice
 
 
 class UTF8JSONResponse(JSONResponse):
@@ -25,6 +29,7 @@ app.include_router(score.router)
 app.include_router(demo.router)
 app.include_router(resources.router, prefix="/api")
 app.include_router(scenario.router)
+app.include_router(voice.router)
 
 
 @app.get("/health")
