@@ -3,6 +3,8 @@ from __future__ import annotations
 import os
 import json
 import re
+import base64
+from typing import Optional
 
 from fastapi import APIRouter
 from pydantic import BaseModel
@@ -13,6 +15,8 @@ router = APIRouter(prefix="/api", tags=["voice"])
 class VoiceAnalyzeRequest(BaseModel):
     transcript: str
     duration_seconds: float = 0
+    audio_base64: Optional[str] = None
+    audio_mime_type: Optional[str] = "audio/webm"
 
 
 class VoiceAnalyzeResponse(BaseModel):
@@ -59,25 +63,35 @@ async def voice_analyze(req: VoiceAnalyzeRequest) -> VoiceAnalyzeResponse:
         return _keyword_fallback(req.transcript)
 
     try:
-        import google.generativeai as genai
-        genai.configure(api_key=api_key)
-        model = genai.GenerativeModel("gemini-1.5-flash")
+        from google import genai
+        from google.genai import types
+        client = genai.Client(api_key=api_key)
 
-        prompt = f"""You are analyzing a voice journal entry from someone who may be experiencing stress related to financial pressures (remittances, debt), work, sleep, or general wellbeing.
+        audio_instruction = "Listen to the audio carefully — analyze tone of voice, speech pace, hesitations, emotional quality, and vocal energy." if req.audio_base64 else ""
+        transcript_line = f'Transcript for reference: "{req.transcript}"' if req.transcript.strip() else ""
+        prompt = f"""You are analyzing a voice journal entry for stress indicators. The speaker may be experiencing stress related to finances, remittances, work, sleep, or general wellbeing.
 
-Transcript: "{req.transcript}"
+{audio_instruction}
+{transcript_line}
 
-Return ONLY a JSON object with these exact fields:
+Return ONLY a JSON object:
 {{
   "stress_score": <float 0-10, where 0=completely calm, 10=extremely stressed>,
   "sentiment": <"calm" | "neutral" | "stressed">,
-  "reasoning": <one sentence explaining what signals indicate the stress level>,
-  "keywords": <array of up to 5 words/phrases from the transcript that most influenced the score>
-}}
+  "reasoning": <one sentence about what signals indicate this stress level>,
+  "keywords": <up to 5 words/phrases or audio characteristics that most influenced the score>
+}}"""
 
-Be nuanced — consider context, not just keywords. Someone saying "I can't sleep because I'm worried about money I sent home" should score higher than someone saying "I feel a bit tired but otherwise okay"."""
+        if req.audio_base64:
+            audio_bytes = base64.b64decode(req.audio_base64)
+            contents = [
+                types.Part(inline_data=types.Blob(mime_type=req.audio_mime_type or "audio/webm", data=audio_bytes)),
+                types.Part(text=prompt),
+            ]
+        else:
+            contents = prompt
 
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(model="gemini-2.5-flash", contents=contents)
         text = response.text.strip()
 
         # Strip markdown code fences if present
@@ -93,5 +107,6 @@ Be nuanced — consider context, not just keywords. Someone saying "I can't slee
             used_llm=True,
         )
 
-    except Exception:
+    except Exception as e:
+        print(f"[voice] Gemini error: {e}")
         return _keyword_fallback(req.transcript)

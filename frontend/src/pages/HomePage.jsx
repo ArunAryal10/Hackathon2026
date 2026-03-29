@@ -326,19 +326,26 @@ export default function HomePage() {
   const weights = getWeights()
 
   useEffect(() => {
+    // Merge real WHOOP data if connected
+    const whoopRaw = localStorage.getItem('whoop_data')
+    const whoopData = whoopRaw ? JSON.parse(whoopRaw) : null
+    const inputs = whoopData
+      ? { ...DEMO_INPUTS, hrv_sleep: { rmssd_ms: whoopData.rmssd_ms, sleep_duration_hrs: whoopData.sleep_duration_hrs, sleep_efficiency_pct: whoopData.sleep_efficiency_pct } }
+      : DEMO_INPUTS
+
     const last = getLastScore()
-    if (last) {
+    if (last && !whoopData) {
       setScoreData(last)
-      setScoreState({ result: last, inputs: DEMO_INPUTS })
+      setScoreState({ result: last, inputs })
       setTrendBase(last.allostatic_load)
       setLoading(false)
     } else {
-      const payload = weights ? { ...DEMO_INPUTS, weights } : DEMO_INPUTS
+      const payload = weights ? { ...inputs, weights } : inputs
       axios.post('/api/score', payload)
         .then(res => {
           saveScoreToHistory(res.data)
           setScoreData(res.data)
-          setScoreState({ result: res.data, inputs: DEMO_INPUTS })
+          setScoreState({ result: res.data, inputs })
           setTrendBase(res.data.allostatic_load)
         })
         .catch(() => {
@@ -348,7 +355,7 @@ export default function HomePage() {
             dominant_stressor: 'financial', nudges: [],
           }
           setScoreData(fallback)
-          setScoreState({ result: fallback, inputs: DEMO_INPUTS })
+          setScoreState({ result: fallback, inputs })
           setTrendBase(fallback.allostatic_load)
         })
         .finally(() => setLoading(false))
@@ -431,7 +438,14 @@ export default function HomePage() {
 
         {/* Sub-score cards */}
         <div className="mb-4">
-          <h2 className="text-sm font-semibold uppercase tracking-wider mb-3" style={{ color: '#555555' }}>Score breakdown</h2>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm font-semibold uppercase tracking-wider" style={{ color: '#555555' }}>Score breakdown</h2>
+            {localStorage.getItem('whoop_connected') === 'true' && (
+              <span className="text-xs px-2 py-0.5 rounded-full bg-green-50 text-green-700 border border-green-200">
+                ⌚ WHOOP live
+              </span>
+            )}
+          </div>
           <div className="grid grid-cols-2 gap-3">
             {Object.keys(SUB_META).map(cat => (
               <SubScoreCard

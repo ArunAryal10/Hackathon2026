@@ -104,6 +104,8 @@ export default function VoiceJournal({ onScore }) {
   const rmsSamplesRef = useRef([])
   const wordCountRef = useRef(0)
   const recognitionRef = useRef(null)
+  const mediaRecorderRef = useRef(null)
+  const audioChunksRef = useRef([])
 
   useEffect(() => {
     if (!window.SpeechRecognition && !window.webkitSpeechRecognition) setSupported(false)
@@ -153,6 +155,13 @@ export default function VoiceJournal({ onScore }) {
       recog.start()
       recognitionRef.current = recog
 
+      // Record raw audio for Gemini native audio analysis
+      audioChunksRef.current = []
+      const mr = new MediaRecorder(stream)
+      mr.ondataavailable = e => { if (e.data.size > 0) audioChunksRef.current.push(e.data) }
+      mr.start()
+      mediaRecorderRef.current = mr
+
       startTimeRef.current = Date.now()
       setPhase('recording')
 
@@ -176,50 +185,65 @@ export default function VoiceJournal({ onScore }) {
     }
   }
 
-  function stopRecording() {
+  async function stopRecording() {
     const elapsed = (Date.now() - startTimeRef.current) / 1000
-    stopAll()
+
+    // Stop timers and recognition first
+    clearInterval(timerRef.current)
+    clearInterval(frameTimerRef.current)
+    try { recognitionRef.current?.stop() } catch {}
+
+    // Collect audio blob before stopping stream
+    let audioPayload = null
+    const mr = mediaRecorderRef.current
+    if (mr && mr.state !== 'inactive') {
+      audioPayload = await new Promise(resolve => {
+        mr.onstop = () => {
+          const blob = new Blob(audioChunksRef.current, { type: mr.mimeType || 'audio/webm' })
+          const reader = new FileReader()
+          reader.onloadend = () => resolve({
+            base64: reader.result.split(',')[1],
+            mimeType: (blob.type || 'audio/webm').split(';')[0],
+          })
+          reader.readAsDataURL(blob)
+        }
+        mr.stop()
+      })
+    }
+
+    // Now stop stream and audio context
+    streamRef.current?.getTracks().forEach(t => t.stop())
+    try { audioCtxRef.current?.close() } catch {}
 
     const pitches = pitchSamplesRef.current
     const rmsVals = rmsSamplesRef.current
-
-    const pitchMean = pitches.length > 0
-      ? pitches.reduce((a, b) => a + b, 0) / pitches.length : 150
-    const rmsMean = rmsVals.length > 0
-      ? rmsVals.reduce((a, b) => a + b, 0) / rmsVals.length : 0.02
+    const pitchMean = pitches.length > 0 ? pitches.reduce((a, b) => a + b, 0) / pitches.length : 150
+    const rmsMean = rmsVals.length > 0 ? rmsVals.reduce((a, b) => a + b, 0) / rmsVals.length : 0.02
     const wordsPerMin = elapsed > 5 ? (wordCountRef.current / elapsed) * 60 : 0
-    const currentTranscript = transcript  // capture current value
+    const currentTranscript = transcript
 
-    const f = {
+    setFeatures({
       pitchMean: Math.round(pitchMean),
       pitchCount: pitches.length,
       rmsMean: Math.round(rmsMean * 1000) / 1000,
       wordsPerMin: Math.round(wordsPerMin),
-    }
-    setFeatures(f)
+    })
 
-    // Acoustic score (local, instant)
     const acousticScore = scoreVoice({ pitchMean, pitchCount: pitches.length, rmsMean, wordsPerMin, transcript: currentTranscript })
 
-    // Call Gemini via backend if we have a transcript
     setPhase('analyzing')
-    if (currentTranscript.trim().length > 3) {
-      try {
-        const { data } = await axios.post('/api/voice-analyze', {
-          transcript: currentTranscript,
-          duration_seconds: elapsed,
-        })
-        // Blend: 70% LLM score + 30% acoustic
-        const blended = Math.round((0.7 * data.stress_score + 0.3 * acousticScore) * 10) / 10
-        setLlmResult(data)
-        setVoiceStress(blended)
-        onScore(blended)
-      } catch {
-        // Backend unavailable — fall back to acoustic only
-        setVoiceStress(acousticScore)
-        onScore(acousticScore)
-      }
-    } else {
+    try {
+      const { data } = await axios.post('/api/voice-analyze', {
+        transcript: currentTranscript,
+        duration_seconds: elapsed,
+        audio_base64: audioPayload?.base64 ?? null,
+        audio_mime_type: audioPayload?.mimeType ?? null,
+      })
+      const blended = Math.round((0.7 * data.stress_score + 0.3 * acousticScore) * 10) / 10
+      setLlmResult(data)
+      setVoiceStress(blended)
+      onScore(blended)
+    } catch {
       setVoiceStress(acousticScore)
       onScore(acousticScore)
     }
@@ -248,7 +272,7 @@ export default function VoiceJournal({ onScore }) {
   if (phase === 'idle') return (
     <div className="text-center">
       <p className="text-sm text-gray-500 mb-4">
-        Speak for 30–60s. We extract pitch, energy, and speech rate — no audio leaves your device.
+        Speak for 30–60s. Audio is analyzed by Gemini for tone, energy, and emotional quality.
       </p>
       <button
         type="button"

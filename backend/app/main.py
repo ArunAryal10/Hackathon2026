@@ -7,7 +7,7 @@ load_dotenv()
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.routers import score, demo, resources, scenario, voice
+from app.routers import score, demo, resources, scenario, voice, whoop
 
 
 class UTF8JSONResponse(JSONResponse):
@@ -30,6 +30,7 @@ app.include_router(demo.router)
 app.include_router(resources.router, prefix="/api")
 app.include_router(scenario.router)
 app.include_router(voice.router)
+app.include_router(whoop.router)
 
 
 @app.get("/health")
