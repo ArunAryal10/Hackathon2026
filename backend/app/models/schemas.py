@@ -24,6 +24,7 @@ class BehavioralInput(BaseModel):
 class SelfReportInput(BaseModel):
     stress_rating: int = Field(..., ge=1, le=10, description="1=no stress, 10=extreme stress")
     mood_rating: int = Field(..., ge=1, le=10, description="1=very low, 10=excellent")
+    voice_stress: Optional[float] = Field(None, ge=0, le=10, description="Voice-derived stress 0–10; blended with slider score when present")
 
 
 class WeightsInput(BaseModel):

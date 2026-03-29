@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { saveScoreToHistory } from '../utils/permissions'
+import VoiceJournal from '../components/VoiceJournal'
 
 // Synthetic "today's data" — simulates auto-sync from wearable + phone
 // In production these would come from HealthKit / Google Fit / Screen Time APIs
@@ -96,6 +97,7 @@ function Section({ title, emoji, source, children }) {
 
 export default function IntakePage() {
   const [form, setForm] = useState(TODAY)
+  const [voiceStress, setVoiceStress] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const navigate = useNavigate()
@@ -131,6 +133,7 @@ export default function IntakePage() {
         self_report: {
           stress_rating: num(form.self_report.stress_rating),
           mood_rating: num(form.self_report.mood_rating),
+          ...(voiceStress !== null && { voice_stress: voiceStress }),
         },
       }
       const { data } = await axios.post('/api/score', payload)
@@ -266,6 +269,15 @@ export default function IntakePage() {
               min={1} max={10}
               leftLabel="1 — Very low" rightLabel="10 — Excellent"
             />
+          </Section>
+
+          {/* Voice journal */}
+          <Section title="Voice journal" emoji="🎙️">
+            <p className="text-xs text-gray-500 mb-4">
+              Optional — voice features (pitch, energy, speech rate) blend with your self-report to improve accuracy.
+              {voiceStress !== null && <span className="text-green-600 font-medium ml-1">✓ Voice score recorded</span>}
+            </p>
+            <VoiceJournal onScore={setVoiceStress} />
           </Section>
 
           {error && (

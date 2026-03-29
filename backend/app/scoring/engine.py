@@ -35,11 +35,14 @@ BAND_THRESHOLDS = [
 ]
 
 
-def _self_report_score(stress_rating: int, mood_rating: int) -> float:
-    # stress 1–10 → 0–100, mood inverted (10=good → 0 stress)
+def _self_report_score(stress_rating: int, mood_rating: int, voice_stress: float | None = None) -> float:
     stress_component = (stress_rating - 1) / 9 * 100
     mood_component = (10 - mood_rating) / 9 * 100
-    return float(np.clip(0.6 * stress_component + 0.4 * mood_component, 0, 100))
+    slider_score = float(np.clip(0.6 * stress_component + 0.4 * mood_component, 0, 100))
+    if voice_stress is None:
+        return slider_score
+    voice_score = float(np.clip(voice_stress / 10 * 100, 0, 100))
+    return float(np.clip(0.6 * slider_score + 0.4 * voice_score, 0, 100))
 
 
 def _band(score: float) -> tuple[str, str]:
@@ -86,6 +89,7 @@ def compute_score(req: ScoreRequest) -> ScoreResponse:
     self_report = _self_report_score(
         req.self_report.stress_rating,
         req.self_report.mood_rating,
+        req.self_report.voice_stress,
     )
 
     sub = {
