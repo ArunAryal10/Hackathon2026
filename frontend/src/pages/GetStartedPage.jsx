@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 
 const FEATURES = [
-  { icon: '✅', label: 'Free forever',   desc: 'No subscription, no hidden fees',         bg: '#f0fdf4', color: '#16a34a' },
+  { icon: '🗓️', label: 'Build routines', desc: 'Weekly habit plans tailored to your life', bg: '#f0fdf4', color: '#16a34a' },
   { icon: '🔒', label: '100% private',   desc: 'Data never leaves your device',           bg: '#fdf0ff', color: '#9333ea' },
   { icon: '🌏', label: 'Bilingual',      desc: 'English + Nepali guidance',               bg: '#fff4ec', color: '#ff5f1f' },
   { icon: '⚡', label: '2-min setup',    desc: 'Quick onboarding, instant insights',      bg: '#fffbeb', color: '#d97706' },
@@ -57,7 +57,7 @@ export default function GetStartedPage() {
         </div>
 
         <button
-          onClick={() => navigate('/login')}
+          onClick={() => navigate('/permissions')}
           className="btn-fruity w-full py-4 rounded-2xl font-bold text-base"
         >
           Create account →
@@ -65,7 +65,7 @@ export default function GetStartedPage() {
 
         <p className="text-center text-xs text-gray-700 mt-4">
           Already have an account?{' '}
-          <button onClick={() => navigate('/login')} className="underline text-brand-500 font-medium">Sign in</button>
+          <button onClick={() => navigate('/signin')} className="underline text-brand-500 font-medium">Sign in</button>
         </p>
 
       </div>

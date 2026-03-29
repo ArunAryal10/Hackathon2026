@@ -26,7 +26,7 @@ export default function PermissionsPage() {
   function handleStart() {
     localStorage.setItem(STORAGE_KEYS.PERMISSIONS, JSON.stringify(permissions))
     localStorage.setItem(STORAGE_KEYS.WEIGHTS, JSON.stringify(weights))
-    navigate('/home')
+    navigate('/login')
   }
 
   return (
@@ -99,7 +99,7 @@ export default function PermissionsPage() {
         )}
 
         <button onClick={handleStart} className="btn-fruity w-full py-4 rounded-2xl font-bold text-base">
-          Start MannChill →
+          Continue →
         </button>
 
         <p className="text-center text-xs mt-4" style={{ color: '#888888' }}>

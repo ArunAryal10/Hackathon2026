@@ -27,8 +27,7 @@ export default function LandingPage() {
             मनशान्ति — Peace of mind
           </p>
           <p className="text-gray-700 text-base leading-relaxed max-w-sm mx-auto">
-            Financial stress is the <span className="font-semibold text-brand-500">silent burden</span> of every Nepali diaspora family.
-            MannChill measures your allostatic load and gives you clear, culturally-adapted guidance.
+            Financial stress is the <span className="font-semibold text-brand-500">silent burden</span> of every Nepali diaspora family. You deserve tools built for your reality.
           </p>
         </div>
 
@@ -62,7 +61,7 @@ export default function LandingPage() {
 
         <p className="text-center text-xs text-gray-700 mt-4">
           Already have an account?{' '}
-          <button onClick={() => navigate('/login')} className="underline text-brand-500 font-medium">Sign in</button>
+          <button onClick={() => navigate('/signin')} className="underline text-brand-500 font-medium">Sign in</button>
         </p>
 
       </div>

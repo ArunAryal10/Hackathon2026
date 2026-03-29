@@ -2,10 +2,6 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { STORAGE_KEYS } from '../utils/permissions'
 
-const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-const CURRENT_YEAR = new Date().getFullYear()
-const YEARS = Array.from({ length: 60 }, (_, i) => CURRENT_YEAR - 18 - i)
-
 const inputStyle = {
   width: '100%',
   background: '#ffffff',
@@ -18,35 +14,30 @@ const inputStyle = {
   transition: 'border-color 0.2s',
 }
 
-export default function LoginPage() {
+export default function SignInPage() {
   const navigate = useNavigate()
   const [mode, setMode] = useState('email')
   const [contact, setContact] = useState('')
-  const [birthYear, setBirthYear] = useState('')
-  const [birthMonth, setBirthMonth] = useState('')
   const [error, setError] = useState(null)
 
-  function handleContinue() {
+  function handleSignIn() {
     if (!contact.trim()) { setError('Please enter your email or phone number.'); return }
-    if (!birthYear || !birthMonth) { setError('Please enter your date of birth.'); return }
     setError(null)
-    localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify({
-      contact: contact.trim(),
-      birthYear: Number(birthYear),
-      birthMonth: Number(birthMonth),
-    }))
-    navigate('/home')
+    localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify({ contact: contact.trim() }))
+    navigate('/home', { replace: true })
   }
 
   return (
     <div className="min-h-screen bg-cream-100 px-4 py-12 flex flex-col">
       <div className="max-w-lg mx-auto w-full flex-1">
 
+        <button onClick={() => navigate(-1)} className="text-sm text-gray-700 mb-8 text-left">← Back</button>
+
         {/* Header */}
         <div className="text-center mb-10">
           <div className="text-4xl mb-3">🧘</div>
-          <h1 className="text-2xl font-bold mb-1" style={{ color: '#111111' }}>Create your account</h1>
-          <p className="text-sm" style={{ color: '#555555' }}>Almost there — set up your profile.</p>
+          <h1 className="text-2xl font-bold mb-1" style={{ color: '#111111' }}>Welcome back</h1>
+          <p className="text-sm" style={{ color: '#555555' }}>Sign in to continue your journey.</p>
         </div>
 
         {/* Toggle */}
@@ -68,7 +59,7 @@ export default function LoginPage() {
         </div>
 
         {/* Contact input */}
-        <div className="mb-6">
+        <div className="mb-8">
           <label className="block text-sm font-semibold mb-2" style={{ color: '#111111' }}>
             {mode === 'email' ? 'Email address' : 'Phone number'}
           </label>
@@ -83,38 +74,6 @@ export default function LoginPage() {
           />
         </div>
 
-        {/* Age */}
-        <div className="mb-8">
-          <label className="block text-sm font-semibold mb-1" style={{ color: '#111111' }}>
-            Date of birth
-          </label>
-          <p className="text-xs mb-3" style={{ color: '#555555' }}>
-            Year and month only — used to calibrate age-related HRV norms.
-          </p>
-          <div className="grid grid-cols-2 gap-3">
-            <select
-              value={birthYear}
-              onChange={e => setBirthYear(e.target.value)}
-              style={inputStyle}
-              onFocus={e => e.target.style.borderColor = '#e040fb'}
-              onBlur={e => e.target.style.borderColor = '#e8d8f8'}
-            >
-              <option value="">Year</option>
-              {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
-            </select>
-            <select
-              value={birthMonth}
-              onChange={e => setBirthMonth(e.target.value)}
-              style={inputStyle}
-              onFocus={e => e.target.style.borderColor = '#e040fb'}
-              onBlur={e => e.target.style.borderColor = '#e8d8f8'}
-            >
-              <option value="">Month</option>
-              {MONTHS.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
-            </select>
-          </div>
-        </div>
-
         {error && (
           <div className="rounded-xl px-4 py-3 mb-4 text-sm"
             style={{ background: '#fff0f3', border: '1px solid #fca5a5', color: '#b91c1c' }}>
@@ -122,12 +81,12 @@ export default function LoginPage() {
           </div>
         )}
 
-        <button onClick={handleContinue} className="btn-fruity w-full py-4 rounded-2xl font-bold text-base">
-          Continue →
+        <button onClick={handleSignIn} className="btn-fruity w-full py-4 rounded-2xl font-bold text-base">
+          Sign in →
         </button>
 
         <p className="text-center text-xs mt-6" style={{ color: '#888888' }}>
-          Your data stays on this device. We never store or share it.
+          Your data stays on this device.
         </p>
 
       </div>
