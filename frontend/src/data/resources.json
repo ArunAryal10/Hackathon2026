@@ -1,0 +1,199 @@
+{
+  "low": {
+    "label": "Low Stress",
+    "message_en": "Your load looks manageable. These resources can help you stay balanced.",
+    "message_ne": "तपाईंको तनाव कम देखिन्छ। यी स्रोतहरूले सन्तुलन कायम राख्न मद्दत गर्छन्।",
+    "resources": [
+      {
+        "id": "low_1",
+        "category": "community",
+        "title_en": "Nepali Community Centers (US)",
+        "title_ne": "नेपाली समुदाय केन्द्र",
+        "description_en": "Connect with local Nepali diaspora groups for social support and events.",
+        "description_ne": "सामाजिक सहयोग र कार्यक्रमहरूका लागि स्थानीय नेपाली प्रवासी समूहसँग जोडिनुहोस्।",
+        "url": "https://www.nafna.org",
+        "type": "community",
+        "free": true
+      },
+      {
+        "id": "low_2",
+        "category": "financial",
+        "title_en": "CFPB Money Management Tools",
+        "title_ne": "CFPB पैसा व्यवस्थापन उपकरण",
+        "description_en": "Free budgeting worksheets and remittance cost comparison tools from the Consumer Financial Protection Bureau.",
+        "description_ne": "उपभोक्ता वित्तीय संरक्षण ब्यूरोबाट नि:शुल्क बजेट वर्कशिट र रेमिट्यान्स लागत तुलना उपकरणहरू।",
+        "url": "https://www.consumerfinance.gov/consumer-tools/send-money-abroad/",
+        "type": "financial",
+        "free": true
+      },
+      {
+        "id": "low_3",
+        "category": "wellness",
+        "title_en": "Headspace (Mindfulness)",
+        "title_ne": "हेडस्पेस (माइन्डफुलनेस)",
+        "description_en": "Guided meditation and sleep tools — 10 minutes a day reduces cortisol markers over 4 weeks.",
+        "description_ne": "निर्देशित ध्यान र निद्रा उपकरणहरू — दिनको १० मिनेटले ४ हप्तामा कोर्टिसोल मार्कर घटाउँछ।",
+        "url": "https://www.headspace.com",
+        "type": "wellness",
+        "free": false,
+        "free_tier": true
+      }
+    ]
+  },
+  "moderate": {
+    "label": "Moderate Stress",
+    "message_en": "You're carrying a noticeable load. Some targeted support can make a real difference.",
+    "message_ne": "तपाईंमा ध्यान दिनलायक तनाव छ। केही लक्षित सहयोगले वास्तविक फरक ल्याउन सक्छ।",
+    "resources": [
+      {
+        "id": "mod_1",
+        "category": "financial",
+        "title_en": "NFCC Financial Counseling",
+        "title_ne": "NFCC वित्तीय परामर्श",
+        "description_en": "Non-profit credit and debt counseling. Sliding-scale fees. Can help restructure remittance obligations into a sustainable plan.",
+        "description_ne": "गैर-नाफामुखी ऋण र क्रेडिट परामर्श। स्लाइडिङ-स्केल शुल्क। रेमिट्यान्स दायित्वलाई दिगो योजनामा पुनर्गठन गर्न मद्दत गर्न सक्छ।",
+        "url": "https://www.nfcc.org",
+        "type": "financial",
+        "free": false,
+        "free_tier": true
+      },
+      {
+        "id": "mod_2",
+        "category": "mental_health",
+        "title_en": "Open Path Collective",
+        "title_ne": "ओपन पाथ कलेक्टिभ",
+        "description_en": "Affordable therapy ($30–$80/session) with therapists experienced in immigrant and cultural identity stress.",
+        "description_ne": "आप्रवासी र सांस्कृतिक पहिचान तनावमा अनुभवी थेरापिस्टहरूसँग किफायती थेरापी ($३०–$८०/सत्र)।",
+        "url": "https://openpathcollective.org",
+        "type": "mental_health",
+        "free": false,
+        "free_tier": false
+      },
+      {
+        "id": "mod_3",
+        "category": "community",
+        "title_en": "SNEHA (South Asian Mental Health Initiative)",
+        "title_ne": "स्नेह (दक्षिण एसियाली मानसिक स्वास्थ्य पहल)",
+        "description_en": "Peer support groups and counselors who understand South Asian family dynamics and remittance pressure.",
+        "description_ne": "दक्षिण एसियाली पारिवारिक गतिशीलता र रेमिट्यान्स दबाव बुझ्ने सहकर्मी सहयोग समूह र परामर्शदाताहरू।",
+        "url": "https://www.snehamass.org",
+        "type": "community",
+        "free": true
+      },
+      {
+        "id": "mod_4",
+        "category": "financial",
+        "title_en": "Remittance Renegotiation Guide",
+        "title_ne": "रेमिट्यान्स पुनर्वार्ता गाइड",
+        "description_en": "A practical guide to having honest conversations with family about sustainable remittance levels — without losing trust.",
+        "description_ne": "विश्वास नगुमाई परिवारसँग दिगो रेमिट्यान्स स्तरबारे इमानदार कुराकानी गर्ने व्यावहारिक गाइड।",
+        "url": "https://www.knomad.org/remittances",
+        "type": "financial",
+        "free": true
+      }
+    ]
+  },
+  "high": {
+    "label": "High Stress",
+    "message_en": "Your load is high. Please reach out — support is available and things can improve.",
+    "message_ne": "तपाईंको भार उच्च छ। कृपया सम्पर्क गर्नुहोस् — सहयोग उपलब्ध छ र अवस्था सुधार्न सकिन्छ।",
+    "resources": [
+      {
+        "id": "high_1",
+        "category": "mental_health",
+        "title_en": "SAMHSA Helpline",
+        "title_ne": "SAMHSA हेल्पलाइन",
+        "description_en": "Free, confidential mental health and substance use referrals. 24/7. Call 1-800-662-4357.",
+        "description_ne": "नि:शुल्क, गोपनीय मानसिक स्वास्थ्य र पदार्थ प्रयोग रेफरल। २४/७। फोन: १-८००-६६२-४३५७।",
+        "url": "https://www.samhsa.gov/find-help/national-helpline",
+        "type": "mental_health",
+        "free": true
+      },
+      {
+        "id": "high_2",
+        "category": "mental_health",
+        "title_en": "Psychology Today Therapist Finder",
+        "title_ne": "साइकोलोजी टुडे थेरापिस्ट फाइन्डर",
+        "description_en": "Filter by \"South Asian\" or \"Immigration\" speciality. Many therapists offer sliding-scale fees.",
+        "description_ne": "\"दक्षिण एसियाली\" वा \"आप्रवास\" विशेषताद्वारा फिल्टर गर्नुहोस्। धेरै थेरापिस्टहरूले स्लाइडिङ-स्केल शुल्क प्रदान गर्छन्।",
+        "url": "https://www.psychologytoday.com/us/therapists",
+        "type": "mental_health",
+        "free": false,
+        "free_tier": false
+      },
+      {
+        "id": "high_3",
+        "category": "financial",
+        "title_en": "Legal Aid Financial Hardship Services",
+        "title_ne": "कानुनी सहयोग वित्तीय कठिनाई सेवाहरू",
+        "description_en": "If debt is a primary stressor, free legal aid can help navigate options including hardship plans.",
+        "description_ne": "यदि ऋण प्राथमिक तनाव हो भने, नि:शुल्क कानुनी सहयोगले कठिनाई योजना सहित विकल्पहरू नेभिगेट गर्न मद्दत गर्न सक्छ।",
+        "url": "https://www.lawhelp.org",
+        "type": "financial",
+        "free": true
+      },
+      {
+        "id": "high_4",
+        "category": "community",
+        "title_en": "Nepali Helpline (NAFCON)",
+        "title_ne": "नेपाली हेल्पलाइन (NAFCON)",
+        "description_en": "Nepali-language support line staffed by trained community volunteers. Understands family, remittance, and diaspora-specific stressors.",
+        "description_ne": "प्रशिक्षित सामुदायिक स्वयंसेवकहरूद्वारा सञ्चालित नेपाली भाषा सहयोग लाइन। परिवार, रेमिट्यान्स, र प्रवासी-विशिष्ट तनाव बुझ्छ।",
+        "url": "https://www.nafcon.org",
+        "type": "community",
+        "free": true
+      }
+    ]
+  },
+  "severe": {
+    "label": "Severe Stress",
+    "message_en": "You are carrying too much right now. Please reach out immediately — you do not have to face this alone.",
+    "message_ne": "तपाईं अहिले धेरै भार बोकिरहनुभएको छ। कृपया तुरुन्त सम्पर्क गर्नुहोस् — तपाईंले यसलाई एक्लै सामना गर्नु पर्दैन।",
+    "resources": [
+      {
+        "id": "sev_1",
+        "category": "crisis",
+        "title_en": "988 Suicide & Crisis Lifeline",
+        "title_ne": "९८८ आत्महत्या र संकट लाइफलाइन",
+        "description_en": "Call or text 988. Free, confidential, 24/7. Available in multiple languages including Nepali interpreter access.",
+        "description_ne": "९८८ मा फोन गर्नुहोस् वा टेक्स्ट गर्नुहोस्। नि:शुल्क, गोपनीय, २४/७। नेपाली अनुवादक पहुँच सहित धेरै भाषाहरूमा उपलब्ध।",
+        "url": "https://988lifeline.org",
+        "type": "crisis",
+        "free": true
+      },
+      {
+        "id": "sev_2",
+        "category": "crisis",
+        "title_en": "Crisis Text Line",
+        "title_ne": "क्राइसिस टेक्स्ट लाइन",
+        "description_en": "Text HOME to 741741. If calling feels hard, texting is an option. Response within minutes.",
+        "description_ne": "741741 मा HOME टेक्स्ट गर्नुहोस्। यदि फोन गर्न गाह्रो लाग्छ भने, टेक्स्टिङ एउटा विकल्प हो। केही मिनेटभित्र प्रतिक्रिया।",
+        "url": "https://www.crisistextline.org",
+        "type": "crisis",
+        "free": true
+      },
+      {
+        "id": "sev_3",
+        "category": "mental_health",
+        "title_en": "SAMHSA Emergency Mental Health",
+        "title_ne": "SAMHSA आपतकालीन मानसिक स्वास्थ्य",
+        "description_en": "Call 1-800-662-4357 for immediate referral to local emergency mental health services.",
+        "description_ne": "स्थानीय आपतकालीन मानसिक स्वास्थ्य सेवाहरूमा तत्काल रेफरलका लागि १-८००-६६२-४३५७ मा फोन गर्नुहोस्।",
+        "url": "https://www.samhsa.gov/find-help/national-helpline",
+        "type": "mental_health",
+        "free": true
+      },
+      {
+        "id": "sev_4",
+        "category": "community",
+        "title_en": "Nepali Community Peer Support",
+        "title_ne": "नेपाली समुदाय सहकर्मी सहयोग",
+        "description_en": "NAFNA and NAFCON both maintain lists of community members trained in mental health first aid who can provide immediate culturally-grounded support.",
+        "description_ne": "NAFNA र NAFCON दुवैले मानसिक स्वास्थ्य प्राथमिक उपचारमा प्रशिक्षित सामुदायिक सदस्यहरूको सूची राख्छन् जसले तत्काल सांस्कृतिक रूपमा आधारित सहयोग प्रदान गर्न सक्छन्।",
+        "url": "https://www.nafna.org",
+        "type": "community",
+        "free": true
+      }
+    ]
+  }
+}

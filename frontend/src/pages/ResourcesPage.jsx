@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import resourcesData from '../data/resources.json'
 
 const BAND_COLORS = {
   low:      { bg: 'bg-green-50',  border: 'border-green-200',  text: 'text-green-700'  },
@@ -93,13 +93,11 @@ export default function ResourcesPage() {
   const navigate = useNavigate()
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
 
   useEffect(() => {
-    axios.get(`/api/resources/${band}`)
-      .then(res => setData(res.data))
-      .catch(() => setError('Could not load resources. Is the backend running?'))
-      .finally(() => setLoading(false))
+    const entry = resourcesData[band] || resourcesData.moderate
+    setData(entry)
+    setLoading(false)
   }, [band])
 
   const colors = BAND_COLORS[band] || BAND_COLORS.moderate
@@ -116,12 +114,6 @@ export default function ResourcesPage() {
 
         {loading && (
           <div className="text-center text-gray-700 py-20">Loading resources…</div>
-        )}
-
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 mb-4 text-sm">
-            {error}
-          </div>
         )}
 
         {data && (
