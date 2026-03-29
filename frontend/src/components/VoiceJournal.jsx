@@ -34,16 +34,53 @@ function detectPitch(buffer, sampleRate) {
   return { pitch: sampleRate / maxPos, rms }
 }
 
-// Map extracted features → voice stress 0–10
-function scoreVoice({ pitchMean, rmsMean, wordsPerMin }) {
-  // Higher pitch → more stress (baseline ~120 Hz, stressed ~250+ Hz)
-  const pitchStress = Math.min(Math.max((pitchMean - 100) / 200, 0), 1)
-  // Higher vocal energy → more stress
-  const energyStress = Math.min(rmsMean / 0.12, 1)
-  // Faster speech → anxiety/stress (normal ~130 wpm, stressed ~200+)
-  const rateStress = Math.min(Math.max((wordsPerMin - 90) / 150, 0), 1)
-  const raw = 0.4 * pitchStress + 0.3 * energyStress + 0.3 * rateStress
-  return Math.round(raw * 100) / 10  // 0–10, 1 decimal
+const STRESS_WORDS = [
+  'stressed', 'stress', 'anxious', 'anxiety', 'worried', 'worry', 'overwhelmed',
+  'exhausted', 'tired', 'drained', 'burned out', 'burnout', 'depressed', 'sad',
+  'angry', 'frustrated', 'scared', 'nervous', 'difficult', 'hard', 'struggling',
+  'bad', 'terrible', 'awful', 'horrible', 'miserable', "can't", 'cannot', 'unable',
+  'problem', 'problems', 'issue', 'issues', 'pressure', 'deadline', 'behind',
+  'no sleep', 'not sleeping', 'insomnia', 'headache', 'sick',
+]
+const CALM_WORDS = [
+  'good', 'great', 'fine', 'okay', 'well', 'happy', 'calm', 'relaxed', 'rested',
+  'positive', 'better', 'excellent', 'wonderful', 'peaceful', 'comfortable',
+  'productive', 'motivated', 'energized', 'refreshed', 'grateful',
+]
+
+function sentimentScore(text) {
+  if (!text || text.trim().length < 3) return 0.5  // neutral if no transcript
+  const lower = text.toLowerCase()
+  let stressHits = 0, calmHits = 0
+  STRESS_WORDS.forEach(w => { if (lower.includes(w)) stressHits++ })
+  CALM_WORDS.forEach(w => { if (lower.includes(w)) calmHits++ })
+  const total = stressHits + calmHits
+  if (total === 0) return 0.5  // neutral
+  return stressHits / total  // 0 = all calm, 1 = all stress
+}
+
+// Map extracted features + transcript → voice stress 0–10
+function scoreVoice({ pitchMean, pitchCount, rmsMean, wordsPerMin, transcript }) {
+  // Sentiment from transcript (most reliable signal) — 40% weight
+  const sentiment = sentimentScore(transcript)
+
+  // Pitch: only use if we got enough valid samples (pitched speech detected)
+  // Typical stressed speech: 180–300 Hz, normal: 100–180 Hz
+  const pitchStress = pitchCount > 3
+    ? Math.min(Math.max((pitchMean - 110) / 170, 0), 1)
+    : 0.4  // neutral fallback when pitch undetectable
+
+  // RMS energy from browser mic is typically 0.005–0.08 for normal speech
+  // Stressed/loud speech: 0.04+
+  const energyStress = Math.min(rmsMean / 0.04, 1)
+
+  // Speech rate: normal ~110–150 wpm, anxious ~170+ wpm
+  const rateStress = wordsPerMin > 20
+    ? Math.min(Math.max((wordsPerMin - 100) / 120, 0), 1)
+    : 0.4  // neutral fallback if too few words
+
+  const raw = 0.40 * sentiment + 0.25 * pitchStress + 0.20 * energyStress + 0.15 * rateStress
+  return Math.round(raw * 10 * 10) / 10  // 0–10, 1 decimal
 }
 
 export default function VoiceJournal({ onScore }) {
@@ -147,16 +184,18 @@ export default function VoiceJournal({ onScore }) {
     const pitchMean = pitches.length > 0
       ? pitches.reduce((a, b) => a + b, 0) / pitches.length : 150
     const rmsMean = rmsVals.length > 0
-      ? rmsVals.reduce((a, b) => a + b, 0) / rmsVals.length : 0.05
-    const wordsPerMin = elapsed > 0 ? (wordCountRef.current / elapsed) * 60 : 100
+      ? rmsVals.reduce((a, b) => a + b, 0) / rmsVals.length : 0.02
+    const wordsPerMin = elapsed > 5 ? (wordCountRef.current / elapsed) * 60 : 0
+    const currentTranscript = transcript  // capture current value
 
     const f = {
       pitchMean: Math.round(pitchMean),
+      pitchCount: pitches.length,
       rmsMean: Math.round(rmsMean * 1000) / 1000,
       wordsPerMin: Math.round(wordsPerMin),
     }
     setFeatures(f)
-    const score = scoreVoice({ pitchMean, rmsMean, wordsPerMin })
+    const score = scoreVoice({ pitchMean, pitchCount: pitches.length, rmsMean, wordsPerMin, transcript: currentTranscript })
     setVoiceStress(score)
     onScore(score)
     setPhase('done')
@@ -228,11 +267,12 @@ export default function VoiceJournal({ onScore }) {
         <p className="text-sm font-medium text-gray-700">Voice analysis complete ✓</p>
         <button type="button" onClick={reset} className="text-xs text-purple-500 hover:underline">Re-record</button>
       </div>
-      <div className="grid grid-cols-3 gap-2 mb-4">
+      <div className="grid grid-cols-4 gap-2 mb-4">
         {[
-          { label: 'Voice stress', value: `${voiceStress}/10`, color: stressColor },
-          { label: 'Speech rate',  value: `${features.wordsPerMin} wpm`, color: '#a78bfa' },
-          { label: 'Avg pitch',    value: `${features.pitchMean} Hz`,    color: '#a78bfa' },
+          { label: 'Voice stress',  value: `${voiceStress}/10`,           color: stressColor },
+          { label: 'Sentiment',     value: sentimentScore(transcript) > 0.55 ? 'Stressed' : sentimentScore(transcript) < 0.35 ? 'Calm' : 'Neutral', color: sentimentScore(transcript) > 0.55 ? '#f87171' : sentimentScore(transcript) < 0.35 ? '#4ade80' : '#facc15' },
+          { label: 'Speech rate',   value: `${features.wordsPerMin} wpm`, color: '#a78bfa' },
+          { label: 'Avg pitch',     value: `${features.pitchMean} Hz`,    color: '#a78bfa' },
         ].map(({ label, value, color }) => (
           <div key={label} className="bg-gray-50 rounded-xl p-3 text-center border border-gray-100">
             <p className="text-[11px] text-gray-400 mb-1">{label}</p>
