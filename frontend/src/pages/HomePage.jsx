@@ -57,9 +57,9 @@ function ProfileDropdown({ user, onClose, navigate }) {
     <>
       <div className="fixed inset-0 z-40" onClick={onClose} />
       <div className="absolute right-0 top-10 z-50 w-64 bg-white rounded-2xl overflow-hidden"
-        style={{ border: '1px solid #f0e4ff', boxShadow: '0 8px 32px rgba(140,60,200,0.18)' }}>
+        style={{ border: '1px solid #e5e5e5', boxShadow: '0 8px 24px rgba(0,0,0,0.12)' }}>
 
-        <div className="px-4 py-4" style={{ borderBottom: '1px solid #f0e4ff' }}>
+        <div className="px-4 py-4" style={{ borderBottom: '1px solid #e5e5e5' }}>
           <p className="text-sm font-bold truncate" style={{ color: '#111111' }}>{user?.contact || 'User'}</p>
           {user?.birthYear && (
             <p className="text-xs mt-0.5" style={{ color: '#555555' }}>
@@ -80,7 +80,7 @@ function ProfileDropdown({ user, onClose, navigate }) {
               <span>{icon}</span> {label}
             </button>
           ))}
-          <div style={{ borderTop: '1px solid #f0e4ff', margin: '4px 0' }} />
+          <div style={{ borderTop: '1px solid #e5e5e5', margin: '4px 0' }} />
           <button onClick={clearAndRedirect}
             className="w-full px-4 py-3 text-left text-sm flex items-center gap-3 transition-colors hover:bg-plum-50"
             style={{ color: '#111111' }}
@@ -160,7 +160,7 @@ export default function HomePage() {
           <button
             onClick={() => setShowProfile(p => !p)}
             className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold transition-all"
-            style={{ background: 'linear-gradient(135deg, #ff5f1f, #e040fb)', boxShadow: '0 4px 12px rgba(255,95,31,0.35)' }}
+            style={{ background: '#111111', boxShadow: 'none' }}
           >
             {user?.contact?.[0]?.toUpperCase() || '?'}
           </button>
@@ -171,22 +171,22 @@ export default function HomePage() {
 
         {/* Weekly progress card */}
         <div className="bg-white rounded-2xl p-5 mb-4"
-          style={{ boxShadow: '0 2px 16px rgba(140,60,200,0.08)', border: '1px solid #f0e4ff' }}>
+          style={{ boxShadow: '0 1px 6px rgba(0,0,0,0.06)', border: '1px solid #e5e5e5' }}>
           <div className="flex items-center justify-between mb-3">
             <div>
               <h2 className="text-sm font-bold" style={{ color: '#111111' }}>This week's progress</h2>
               <p className="text-xs mt-0.5" style={{ color: '#555555' }}>{done} of {total} challenges complete</p>
             </div>
-            <div className="text-2xl font-extrabold" style={{ color: pct >= 80 ? '#16a34a' : pct >= 40 ? '#d97706' : '#ff5f1f' }}>
+            <div className="text-2xl font-extrabold" style={{ color: '#111111' }}>
               {pct}%
             </div>
           </div>
-          <div className="h-3 rounded-full overflow-hidden mb-1" style={{ background: '#f0e4ff' }}>
+          <div className="h-3 rounded-full overflow-hidden mb-1" style={{ background: '#e5e5e5' }}>
             <div
               className="h-full rounded-full transition-all duration-500"
               style={{
                 width: `${pct}%`,
-                background: 'linear-gradient(to right, #ff5f1f, #e040fb)',
+                background: '#111111',
               }}
             />
           </div>
@@ -200,11 +200,11 @@ export default function HomePage() {
         {/* What's left this week */}
         {remaining.length > 0 && (
           <div className="bg-white rounded-2xl p-5 mb-4"
-            style={{ boxShadow: '0 2px 12px rgba(0,0,0,0.05)', border: '1px solid #f0e4ff' }}>
+            style={{ boxShadow: '0 2px 12px rgba(0,0,0,0.05)', border: '1px solid #e5e5e5' }}>
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-sm font-bold" style={{ color: '#111111' }}>Up next this week</h2>
               <button onClick={() => navigate('/routine')}
-                className="text-xs font-semibold underline" style={{ color: '#e040fb' }}>
+                className="text-xs font-semibold underline" style={{ color: '#111111' }}>
                 See all
               </button>
             </div>
@@ -214,8 +214,8 @@ export default function HomePage() {
                   <div
                     className="mt-0.5 w-5 h-5 rounded flex items-center justify-center flex-shrink-0 transition-all"
                     style={{
-                      background: checked[task.id] ? 'linear-gradient(135deg, #ff5f1f, #e040fb)' : '#ffffff',
-                      border: checked[task.id] ? 'none' : '1.5px solid #d0b0f0',
+                      background: checked[task.id] ? '#111111' : '#ffffff',
+                      border: checked[task.id] ? 'none' : '1.5px solid #cccccc',
                     }}
                     onClick={() => toggleTask(task.id)}
                   >
@@ -241,8 +241,8 @@ export default function HomePage() {
         {/* Top nudge */}
         {nudge && (
           <div className="bg-white rounded-2xl p-5 mb-4"
-            style={{ border: '1.5px solid #fdd0b0', boxShadow: '0 2px 16px rgba(255,95,31,0.1)' }}>
-            <h2 className="text-sm font-semibold uppercase tracking-wider mb-2" style={{ color: '#ff5f1f' }}>Today's nudge</h2>
+            style={{ border: '1px solid #e5e5e5', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
+            <h2 className="text-sm font-semibold uppercase tracking-wider mb-2" style={{ color: '#111111' }}>Today's nudge</h2>
             <p className="text-sm leading-relaxed" style={{ color: '#111111' }}>{nudge.message_en}</p>
             {nudge.message_ne && (
               <p className="text-xs mt-1" style={{ color: '#555555' }}>{nudge.message_ne}</p>
@@ -252,20 +252,20 @@ export default function HomePage() {
 
         {/* Quick actions */}
         <div className="bg-white rounded-2xl p-5 mb-4"
-          style={{ boxShadow: '0 2px 12px rgba(0,0,0,0.06)', border: '1px solid #f0e4ff' }}>
+          style={{ boxShadow: '0 2px 12px rgba(0,0,0,0.06)', border: '1px solid #e5e5e5' }}>
           <h2 className="text-sm font-semibold uppercase tracking-wider mb-3" style={{ color: '#555555' }}>Quick actions</h2>
           <div className="grid grid-cols-2 gap-2">
             {[
-              { label: '📊 My score',      path: '/score',    bg: '#fff4ec', color: '#ff5f1f' },
-              { label: '🔮 Run what-if',   path: '/scenario', bg: '#fdf0ff', color: '#9333ea' },
-              { label: '🤝 Resources',     path: '/resources/moderate', bg: '#f0fdf4', color: '#16a34a' },
-              { label: '✅ Full routine',  path: '/routine',  bg: '#fffbeb', color: '#d97706' },
-            ].map(({ label, path, bg, color }) => (
+              { label: '📊 My score',      path: '/score' },
+              { label: '🔮 Run what-if',   path: '/scenario' },
+              { label: '🤝 Resources',     path: '/resources/moderate' },
+              { label: '✅ Full routine',  path: '/routine' },
+            ].map(({ label, path }) => (
               <button
                 key={path}
                 onClick={() => navigate(path)}
                 className="py-3 px-3 rounded-xl text-sm text-left font-medium transition-all"
-                style={{ background: bg, color }}
+                style={{ background: '#f5f5f5', color: '#111111' }}
               >
                 {label}
               </button>

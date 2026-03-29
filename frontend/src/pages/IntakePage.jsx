@@ -56,7 +56,7 @@ function Input({ value, onChange, placeholder, type = 'number', min, max, step }
       min={min}
       max={max}
       step={step}
-      className="w-full bg-white border border-gray-200 rounded-lg px-4 py-2.5 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-colors"
+      className="w-full bg-white border border-gray-200 rounded-lg px-4 py-2.5 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-gray-900 transition-colors"
     />
   )
 }
@@ -71,7 +71,7 @@ function RangeField({ label, hint, value, onChange, min, max, step = 1, leftLabe
         step={step}
         value={value}
         onChange={onChange}
-        className="w-full accent-purple-500"
+        className="w-full accent-gray-900"
       />
       <div className="flex justify-between text-xs text-gray-700 mt-1">
         <span>{leftLabel}</span>
@@ -175,8 +175,8 @@ export default function IntakePage() {
         </div>
 
         {/* Demo shortcuts */}
-        <div className="bg-white rounded-2xl p-5 mb-6 border border-brand-200">
-          <p className="text-sm text-brand-400 font-medium mb-3">Quick demo — load a synthetic profile</p>
+        <div className="bg-white rounded-2xl p-5 mb-6 border border-gray-200">
+          <p className="text-sm text-gray-700 font-medium mb-3">Quick demo — load a synthetic profile</p>
           <div className="flex gap-3">
             <button
               onClick={() => loadDemo('profile_a')}
@@ -289,7 +289,7 @@ export default function IntakePage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3.5 rounded-xl bg-brand-500 hover:bg-brand-400 disabled:bg-purple-900 disabled:text-brand-500 text-gray-900 font-semibold text-base transition-colors"
+            className="w-full py-3.5 rounded-xl bg-gray-900 hover:bg-gray-700 disabled:bg-gray-300 disabled:text-gray-500 text-white font-semibold text-base transition-colors"
           >
             {loading ? 'Calculating…' : 'Calculate my score →'}
           </button>

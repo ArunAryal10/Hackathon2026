@@ -9,7 +9,7 @@ const YEARS = Array.from({ length: 60 }, (_, i) => CURRENT_YEAR - 18 - i)
 const inputStyle = {
   width: '100%',
   background: '#ffffff',
-  border: '1.5px solid #e8d8f8',
+  border: '1.5px solid #e0e0e0',
   borderRadius: '0.75rem',
   padding: '0.75rem 1rem',
   color: '#111111',
@@ -51,14 +51,14 @@ export default function LoginPage() {
 
         {/* Toggle */}
         <div className="flex bg-white rounded-xl p-1 mb-6"
-          style={{ border: '1.5px solid #e8d8f8', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+          style={{ border: '1.5px solid #e0e0e0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
           {['email', 'phone'].map(m => (
             <button
               key={m}
               onClick={() => { setMode(m); setContact('') }}
               className="flex-1 py-2 rounded-lg text-sm font-semibold transition-all capitalize"
               style={mode === m
-                ? { background: 'linear-gradient(135deg, #ff5f1f, #e040fb)', color: 'white' }
+                ? { background: '#111111', color: 'white' }
                 : { color: '#555555' }
               }
             >
@@ -78,8 +78,8 @@ export default function LoginPage() {
             onChange={e => setContact(e.target.value)}
             placeholder={mode === 'email' ? 'you@example.com' : '+1 (555) 000-0000'}
             style={inputStyle}
-            onFocus={e => e.target.style.borderColor = '#e040fb'}
-            onBlur={e => e.target.style.borderColor = '#e8d8f8'}
+            onFocus={e => e.target.style.borderColor = '#111111'}
+            onBlur={e => e.target.style.borderColor = '#e0e0e0'}
           />
         </div>
 
@@ -96,8 +96,8 @@ export default function LoginPage() {
               value={birthYear}
               onChange={e => setBirthYear(e.target.value)}
               style={inputStyle}
-              onFocus={e => e.target.style.borderColor = '#e040fb'}
-              onBlur={e => e.target.style.borderColor = '#e8d8f8'}
+              onFocus={e => e.target.style.borderColor = '#111111'}
+              onBlur={e => e.target.style.borderColor = '#e0e0e0'}
             >
               <option value="">Year</option>
               {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
@@ -106,8 +106,8 @@ export default function LoginPage() {
               value={birthMonth}
               onChange={e => setBirthMonth(e.target.value)}
               style={inputStyle}
-              onFocus={e => e.target.style.borderColor = '#e040fb'}
-              onBlur={e => e.target.style.borderColor = '#e8d8f8'}
+              onFocus={e => e.target.style.borderColor = '#111111'}
+              onBlur={e => e.target.style.borderColor = '#e0e0e0'}
             >
               <option value="">Month</option>
               {MONTHS.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}

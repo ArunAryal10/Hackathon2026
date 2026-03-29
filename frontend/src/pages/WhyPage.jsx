@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router-dom'
 
 const MEASURES = [
-  { icon: '💸', label: 'Financial stress',  desc: 'Remittance burden, debt, income stability', pct: '40%',  bg: '#fff4ec', accent: '#ff5f1f' },
-  { icon: '💓', label: 'HRV + Sleep',       desc: 'Heart rate variability, sleep quality',     pct: '25%',  bg: '#fdf0ff', accent: '#e040fb' },
-  { icon: '📱', label: 'Behavior',           desc: 'Screen time, activity, exercise',           pct: '20%',  bg: '#f0fdf4', accent: '#16a34a' },
-  { icon: '🧠', label: 'Self-report',        desc: 'Mood and stress rating',                    pct: '15%',  bg: '#fffbeb', accent: '#d97706' },
+  { icon: '💸', label: 'Financial stress',  desc: 'Remittance burden, debt, income stability', pct: '40%',  bg: '#f5f5f5', accent: '#111111' },
+  { icon: '💓', label: 'HRV + Sleep',       desc: 'Heart rate variability, sleep quality',     pct: '25%',  bg: '#f5f5f5', accent: '#111111' },
+  { icon: '📱', label: 'Behavior',           desc: 'Screen time, activity, exercise',           pct: '20%',  bg: '#f5f5f5', accent: '#111111' },
+  { icon: '🧠', label: 'Self-report',        desc: 'Mood and stress rating',                    pct: '15%',  bg: '#f5f5f5', accent: '#111111' },
 ]
 
 export default function WhyPage() {
@@ -29,7 +29,7 @@ export default function WhyPage() {
         <div className="space-y-3 flex-1">
           {MEASURES.map(item => (
             <div key={item.label} className="bg-white rounded-2xl p-4 flex items-center gap-4"
-              style={{ boxShadow: '0 2px 10px rgba(0,0,0,0.06)', border: `1.5px solid ${item.accent}25` }}>
+              style={{ boxShadow: '0 2px 10px rgba(0,0,0,0.06)', border: '1.5px solid #e5e5e5' }}>
               <div className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl flex-shrink-0"
                 style={{ background: item.bg }}>
                 {item.icon}
@@ -45,7 +45,7 @@ export default function WhyPage() {
 
         {/* Note */}
         <div className="bg-white rounded-2xl p-4 mt-6 mb-6"
-          style={{ border: '1px solid #f0e4ff', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+          style={{ border: '1px solid #e5e5e5', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
           <p className="text-xs text-gray-700 leading-relaxed">
             🔒 <span className="font-semibold text-gray-700">All data stays on your device.</span> Nothing is stored or shared externally. The scoring model runs on our server but receives only numbers — never identifiable information.
           </p>
@@ -54,7 +54,7 @@ export default function WhyPage() {
         {/* Progress dots */}
         <div className="flex justify-center gap-2 mb-8">
           <div className="w-2 h-2 rounded-full bg-gray-200" />
-          <div className="w-6 h-2 rounded-full bg-brand-500" />
+          <div className="w-6 h-2 rounded-full bg-gray-900" />
           <div className="w-2 h-2 rounded-full bg-gray-200" />
         </div>
 

@@ -66,7 +66,7 @@ function TrendStats({ data }) {
         { label: 'MAX', value: max, color: scoreColor(max) },
       ].map(({ label, value, color }) => (
         <div key={label} className="rounded-xl p-3 text-center"
-          style={{ background: '#faf5ff', border: '1px solid #f0e4ff' }}>
+          style={{ background: '#f5f5f5', border: '1px solid #e5e5e5' }}>
           <p className="text-xs mb-1" style={{ color: '#555555' }}>{label}</p>
           <p className="text-xl font-bold" style={{ color }}>{value}</p>
         </div>
@@ -83,22 +83,22 @@ function TrendCard({ weekData, monthData, yearData }) {
   const isYear = tab === '1Y'
 
   const tooltipStyle = {
-    contentStyle: { background: '#ffffff', border: '1px solid #f0e4ff', borderRadius: 10, boxShadow: '0 4px 16px rgba(0,0,0,0.1)' },
+    contentStyle: { background: '#ffffff', border: '1px solid #e5e5e5', borderRadius: 10, boxShadow: '0 4px 16px rgba(0,0,0,0.1)' },
     labelStyle: { color: '#111111', fontSize: 11, fontWeight: 600 },
-    itemStyle: { color: '#ff5f1f', fontSize: 11 },
+    itemStyle: { color: '#111111', fontSize: 11 },
   }
 
   return (
     <div className="bg-white rounded-2xl p-5 mb-4"
-      style={{ boxShadow: '0 2px 16px rgba(140,60,200,0.08)', border: '1px solid #f0e4ff' }}>
+      style={{ boxShadow: '0 1px 6px rgba(0,0,0,0.06)', border: '1px solid #e5e5e5' }}>
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-sm font-semibold uppercase tracking-wider" style={{ color: '#555555' }}>Stress trend</h2>
-        <div className="flex rounded-xl p-0.5 gap-0.5" style={{ background: '#faf5ff' }}>
+        <div className="flex rounded-xl p-0.5 gap-0.5" style={{ background: '#f5f5f5' }}>
           {TREND_TABS.map(t => (
             <button key={t} onClick={() => setTab(t)}
               className="px-3 py-1 rounded-lg text-xs font-semibold transition-all"
               style={tab === t
-                ? { background: 'linear-gradient(135deg, #ff5f1f, #e040fb)', color: 'white' }
+                ? { background: '#111111', color: 'white' }
                 : { color: '#555555' }
               }
             >{t}</button>
@@ -108,11 +108,11 @@ function TrendCard({ weekData, monthData, yearData }) {
       <ResponsiveContainer width="100%" height={150}>
         {isYear ? (
           <BarChart data={data} margin={{ left: -15, right: 5, top: 5, bottom: 0 }} barSize={18}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f0e4ff" vertical={false} />
-            <XAxis dataKey="date" tick={{ fill: '#b09ac0', fontSize: 10 }} axisLine={false} tickLine={false} />
-            <YAxis domain={[0, 100]} tick={{ fill: '#b09ac0', fontSize: 10 }} axisLine={false} tickLine={false} />
-            <Tooltip {...tooltipStyle} cursor={{ fill: 'rgba(224,64,251,0.05)' }} />
-            <ReferenceLine y={50} stroke="#f0e4ff" strokeDasharray="3 3" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#e5e5e5" vertical={false} />
+            <XAxis dataKey="date" tick={{ fill: '#aaaaaa', fontSize: 10 }} axisLine={false} tickLine={false} />
+            <YAxis domain={[0, 100]} tick={{ fill: '#aaaaaa', fontSize: 10 }} axisLine={false} tickLine={false} />
+            <Tooltip {...tooltipStyle} cursor={{ fill: 'rgba(0,0,0,0.04)' }} />
+            <ReferenceLine y={50} stroke="#e5e5e5" strokeDasharray="3 3" />
             <Bar dataKey="score" radius={[4, 4, 0, 0]}>
               {data.map((d, i) => <Cell key={i} fill={scoreColor(d.score)} fillOpacity={0.9} />)}
             </Bar>
@@ -121,18 +121,18 @@ function TrendCard({ weekData, monthData, yearData }) {
           <AreaChart data={data} margin={{ left: -15, right: 5, top: 5, bottom: 0 }}>
             <defs>
               <linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#ff5f1f" stopOpacity={0.2} />
-                <stop offset="95%" stopColor="#e040fb" stopOpacity={0.02} />
+                <stop offset="5%" stopColor="#111111" stopOpacity={0.2} />
+                <stop offset="95%" stopColor="#111111" stopOpacity={0.02} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f0e4ff" vertical={false} />
-            <XAxis dataKey="date" tick={{ fill: '#b09ac0', fontSize: 10 }} axisLine={false} tickLine={false} />
-            <YAxis domain={[0, 100]} tick={{ fill: '#b09ac0', fontSize: 10 }} axisLine={false} tickLine={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="#e5e5e5" vertical={false} />
+            <XAxis dataKey="date" tick={{ fill: '#aaaaaa', fontSize: 10 }} axisLine={false} tickLine={false} />
+            <YAxis domain={[0, 100]} tick={{ fill: '#aaaaaa', fontSize: 10 }} axisLine={false} tickLine={false} />
             <Tooltip {...tooltipStyle} />
-            <ReferenceLine y={50} stroke="#f0e4ff" strokeDasharray="3 3" />
-            <Area type="monotone" dataKey="score" stroke="#ff5f1f" strokeWidth={2.5}
+            <ReferenceLine y={50} stroke="#e5e5e5" strokeDasharray="3 3" />
+            <Area type="monotone" dataKey="score" stroke="#111111" strokeWidth={2.5}
               fill="url(#trendGrad)" dot={false}
-              activeDot={{ r: 4, fill: '#ff5f1f', strokeWidth: 0 }} />
+              activeDot={{ r: 4, fill: '#111111', strokeWidth: 0 }} />
           </AreaChart>
         )}
       </ResponsiveContainer>
@@ -157,20 +157,20 @@ function Gauge({ score }) {
   const color = scoreColor(score)
   return (
     <svg viewBox="0 0 200 160" className="w-52 h-40 mx-auto">
-      <path d={arc(210, 450)} fill="none" stroke="#f0e4ff" strokeWidth="14" strokeLinecap="round" />
+      <path d={arc(210, 450)} fill="none" stroke="#e5e5e5" strokeWidth="14" strokeLinecap="round" />
       <path d={arc(210, end)} fill="none" stroke={color} strokeWidth="14" strokeLinecap="round" />
       <circle cx={nx} cy={ny} r="5" fill={color} />
-      <text x={cx} y={cy + 10} textAnchor="middle" fontSize="28" fontWeight="bold" fill="#1e0a2e">{score?.toFixed(1)}</text>
-      <text x={cx} y={cy + 28} textAnchor="middle" fontSize="10" fill="#9d7ab5">allostatic load</text>
+      <text x={cx} y={cy + 10} textAnchor="middle" fontSize="28" fontWeight="bold" fill="#111111">{score?.toFixed(1)}</text>
+      <text x={cx} y={cy + 28} textAnchor="middle" fontSize="10" fill="#888888">allostatic load</text>
     </svg>
   )
 }
 
 const SUB_META = {
-  financial:   { icon: '💸', label: 'Financial',   detail: '/detail/financial', bg: '#fff4ec', accent: '#ff5f1f' },
-  hrv_sleep:   { icon: '💓', label: 'HRV & Sleep', detail: '/detail/hrv',       bg: '#fdf0ff', accent: '#e040fb' },
-  behavioral:  { icon: '📱', label: 'Behavioral',  detail: '/detail/behavioral', bg: '#f0fdf4', accent: '#16a34a' },
-  self_report: { icon: '🧠', label: 'Self-report', detail: '/detail/self-report', bg: '#fffbeb', accent: '#d97706' },
+  financial:   { icon: '💸', label: 'Financial',   detail: '/detail/financial', bg: '#ffffff', accent: '#111111' },
+  hrv_sleep:   { icon: '💓', label: 'HRV & Sleep', detail: '/detail/hrv',       bg: '#ffffff', accent: '#111111' },
+  behavioral:  { icon: '📱', label: 'Behavioral',  detail: '/detail/behavioral', bg: '#ffffff', accent: '#111111' },
+  self_report: { icon: '🧠', label: 'Self-report', detail: '/detail/self-report', bg: '#ffffff', accent: '#111111' },
 }
 
 const WEIGHT_TO_PERM = {
@@ -186,7 +186,7 @@ function SubScoreCard({ category, score, navigate, scoreState, permitted }) {
   if (!permitted) {
     return (
       <div className="rounded-2xl p-4 opacity-40"
-        style={{ background: '#faf5ff', border: '1px solid #f0e4ff' }}>
+        style={{ background: '#f5f5f5', border: '1px solid #e5e5e5' }}>
         <div className="flex items-center gap-2 mb-1">
           <span>{meta.icon}</span>
           <span className="text-xs" style={{ color: '#555555' }}>{meta.label}</span>
@@ -199,8 +199,8 @@ function SubScoreCard({ category, score, navigate, scoreState, permitted }) {
     <button
       onClick={() => navigate(meta.detail, { state: scoreState })}
       className="rounded-2xl p-4 text-left transition-all"
-      style={{ background: meta.bg, border: `1.5px solid ${meta.accent}30` }}
-      onMouseEnter={e => { e.currentTarget.style.boxShadow = `0 4px 16px ${meta.accent}25` }}
+      style={{ background: meta.bg, border: '1.5px solid #e5e5e5' }}
+      onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)' }}
       onMouseLeave={e => { e.currentTarget.style.boxShadow = 'none' }}
     >
       <div className="flex items-center justify-between mb-2">
@@ -210,7 +210,7 @@ function SubScoreCard({ category, score, navigate, scoreState, permitted }) {
         </div>
         <span className="text-lg font-bold" style={{ color }}>{Math.round(score)}</span>
       </div>
-      <div className="h-1.5 rounded-full overflow-hidden" style={{ background: `${meta.accent}20` }}>
+      <div className="h-1.5 rounded-full overflow-hidden" style={{ background: '#e5e5e5' }}>
         <div className="h-full rounded-full" style={{ width: `${score}%`, backgroundColor: color }} />
       </div>
     </button>
@@ -319,7 +319,7 @@ export default function MyScorePage() {
 
         {/* Spectrum bar */}
         <div className="bg-white rounded-2xl p-4 mb-4"
-          style={{ boxShadow: '0 2px 12px rgba(0,0,0,0.05)', border: '1px solid #f0e4ff' }}>
+          style={{ boxShadow: '0 2px 12px rgba(0,0,0,0.05)', border: '1px solid #e5e5e5' }}>
           <p className="text-xs mb-2 font-medium" style={{ color: '#555555' }}>Stress spectrum</p>
           <div className="relative h-4 rounded-full overflow-hidden"
             style={{ background: 'linear-gradient(to right, #4ade80, #facc15, #fb923c, #f87171)' }}>
