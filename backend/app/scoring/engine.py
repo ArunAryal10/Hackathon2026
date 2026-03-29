@@ -28,10 +28,10 @@ WEIGHTS = {
 }
 
 BAND_THRESHOLDS = [
-    (25,  "low",      "no significant distress"),
-    (50,  "moderate", "mild-moderate distress"),
-    (75,  "high",     "moderate-severe distress"),
-    (101, "severe",   "severe distress"),
+    (25,  "low",      "low stress"),
+    (50,  "moderate", "moderate stress"),
+    (75,  "high",     "high stress"),
+    (101, "severe",   "severe stress"),
 ]
 
 
@@ -46,10 +46,10 @@ def _self_report_score(stress_rating: int, mood_rating: int, voice_stress: float
 
 
 def _band(score: float) -> tuple[str, str]:
-    for threshold, band, k6 in BAND_THRESHOLDS:
+    for threshold, band, label in BAND_THRESHOLDS:
         if score <= threshold:
-            return band, k6
-    return "severe", "severe distress"
+            return band, label
+    return "severe", "severe stress"
 
 
 def _dominant_stressor(sub_scores: dict[str, float]) -> str:
@@ -102,7 +102,7 @@ def compute_score(req: ScoreRequest) -> ScoreResponse:
     composite = sum(sub[k] * weights[k] for k in weights)
     composite = float(np.clip(composite, 0, 100))
 
-    band, k6 = _band(composite)
+    band, level = _band(composite)
     weighted = {k: sub[k] * weights[k] for k in weights}
     dominant = max(weighted, key=weighted.get)
 
@@ -112,7 +112,7 @@ def compute_score(req: ScoreRequest) -> ScoreResponse:
     return ScoreResponse(
         allostatic_load=round(composite, 1),
         band=band,
-        k6_equivalent=k6,
+        stress_level=level,
         sub_scores=SubScores(
             hrv_sleep=round(hrv_sleep, 1),
             financial=round(financial, 1),

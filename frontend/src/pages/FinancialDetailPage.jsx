@@ -96,9 +96,10 @@ export default function FinancialDetailPage() {
         {/* Cultural note */}
         <div className="bg-white rounded-2xl border border-yellow-900/50 p-5 mb-8">
           <p className="text-xs text-yellow-700 leading-relaxed">
-            <span className="font-semibold">इज्जत (Izzat) note:</span> Remittance obligations are a deeply
-            important part of family honor for Nepali diaspora. These figures are for awareness, not judgement.
-            View resources for culturally-grounded guidance on sustainable limits.
+            <span className="font-semibold">Note:</span> Remittance obligations reflect deep family
+            commitment. These figures are for awareness, not judgement.
+            Research shows financial burden is the strongest predictor of psychological distress
+            in migrant populations (Simkhada et al., 2021).
           </p>
         </div>
 

@@ -153,6 +153,9 @@ function TrendCard({ weekData, monthData, yearData }) {
       </ResponsiveContainer>
 
       <TrendStats data={data} />
+      <p className="text-center text-xs mt-2" style={{ color: '#b09ac0' }}>
+        Projected trend · updates with each new score
+      </p>
     </div>
   )
 }
@@ -330,7 +333,13 @@ export default function HomePage() {
     const whoopRaw = localStorage.getItem('whoop_data')
     const whoopData = whoopRaw ? JSON.parse(whoopRaw) : null
     const inputs = whoopData
-      ? { ...DEMO_INPUTS, hrv_sleep: { rmssd_ms: whoopData.rmssd_ms, sleep_duration_hrs: whoopData.sleep_duration_hrs, sleep_efficiency_pct: whoopData.sleep_efficiency_pct } }
+      ? {
+          ...DEMO_INPUTS,
+          hrv_sleep: { rmssd_ms: whoopData.rmssd_ms, sleep_duration_hrs: whoopData.sleep_duration_hrs, sleep_efficiency_pct: whoopData.sleep_efficiency_pct },
+          ...(whoopData.exercise_mins_week != null && {
+            behavioral: { ...DEMO_INPUTS.behavioral, exercise_mins_per_week: whoopData.exercise_mins_week }
+          }),
+        }
       : DEMO_INPUTS
 
     const last = getLastScore()
@@ -350,7 +359,7 @@ export default function HomePage() {
         })
         .catch(() => {
           const fallback = {
-            allostatic_load: 62.4, band: 'high', k6_equivalent: 'moderate-severe distress',
+            allostatic_load: 62.4, band: 'high', stress_level: 'high stress',
             sub_scores: { hrv_sleep: 55, financial: 70, behavioral: 45, self_report: 60 },
             dominant_stressor: 'financial', nudges: [],
           }
@@ -362,9 +371,34 @@ export default function HomePage() {
     }
   }, [])
 
-  const weekData  = useMemo(() => trendBase ? syntheticWeek(trendBase)  : [], [trendBase])
-  const monthData = useMemo(() => trendBase ? syntheticMonth(trendBase) : [], [trendBase])
-  const yearData  = useMemo(() => trendBase ? syntheticYear(trendBase)  : [], [trendBase])
+  // Persist trend data so it stays stable across page loads
+  const weekData  = useMemo(() => {
+    if (!trendBase) return []
+    const key = 'mannchill_trend_week'
+    const stored = localStorage.getItem(key)
+    if (stored) { try { const d = JSON.parse(stored); if (d.base === Math.round(trendBase)) return d.data } catch {} }
+    const data = syntheticWeek(trendBase)
+    localStorage.setItem(key, JSON.stringify({ base: Math.round(trendBase), data }))
+    return data
+  }, [trendBase])
+  const monthData = useMemo(() => {
+    if (!trendBase) return []
+    const key = 'mannchill_trend_month'
+    const stored = localStorage.getItem(key)
+    if (stored) { try { const d = JSON.parse(stored); if (d.base === Math.round(trendBase)) return d.data } catch {} }
+    const data = syntheticMonth(trendBase)
+    localStorage.setItem(key, JSON.stringify({ base: Math.round(trendBase), data }))
+    return data
+  }, [trendBase])
+  const yearData  = useMemo(() => {
+    if (!trendBase) return []
+    const key = 'mannchill_trend_year'
+    const stored = localStorage.getItem(key)
+    if (stored) { try { const d = JSON.parse(stored); if (d.base === Math.round(trendBase)) return d.data } catch {} }
+    const data = syntheticYear(trendBase)
+    localStorage.setItem(key, JSON.stringify({ base: Math.round(trendBase), data }))
+    return data
+  }, [trendBase])
 
   const user = (() => { try { return JSON.parse(localStorage.getItem(STORAGE_KEYS.USER)) } catch { return null } })()
   const unpermittedCount = Object.values(permissions).filter(v => !v).length
@@ -410,7 +444,7 @@ export default function HomePage() {
           <Gauge score={r.allostatic_load} />
           <div className="inline-block mt-2 px-4 py-1.5 rounded-full text-sm font-bold"
             style={{ background: '#ffffff', color: band.text, border: `1.5px solid ${band.border}` }}>
-            {bandLabel(r.band)} — {r.k6_equivalent}
+            {bandLabel(r.band)} — {r.stress_level}
           </div>
           <p className="text-xs mt-2" style={{ color: '#555555' }}>
             Primary stressor: <span className="font-semibold" style={{ color: '#111111' }}>{r.dominant_stressor?.replace('_', ' ')}</span>
@@ -497,9 +531,11 @@ export default function HomePage() {
           <div className="grid grid-cols-2 gap-2">
             {[
               { label: '📊 Get new score',  path: '/intake',                  bg: '#fff4ec', color: '#ff5f1f' },
+              { label: '📡 Data sources',   path: '/sources',                 bg: '#f0f0ff', color: '#6366f1' },
               { label: '🔮 Run what-if',    path: '/scenario',                bg: '#fdf0ff', color: '#9333ea' },
               { label: '🤝 View resources', path: `/resources/${r.band}`,     bg: '#f0fdf4', color: '#16a34a' },
               { label: '✅ Weekly routine', path: '/routine',                  bg: '#fffbeb', color: '#d97706' },
+              { label: '📚 Research base', path: '/research',                bg: '#f5f3ff', color: '#7c3aed' },
             ].map(({ label, path, bg, color }) => (
               <button
                 key={path}

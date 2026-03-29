@@ -97,6 +97,8 @@ export default function DataSourcesPage() {
         { label: 'Sleep efficiency', value: `${whoopData.sleep_efficiency_pct}%` },
         ...(whoopData.resting_heart_rate ? [{ label: 'Resting HR', value: `${whoopData.resting_heart_rate} bpm` }] : []),
         ...(whoopData.recovery_score != null ? [{ label: 'Recovery', value: `${whoopData.recovery_score}%` }] : []),
+        ...(whoopData.strain_score != null ? [{ label: 'Strain', value: whoopData.strain_score }] : []),
+        ...(whoopData.exercise_mins_week != null ? [{ label: 'Exercise (7d)', value: `${Math.round(whoopData.exercise_mins_week)} min` }] : []),
       ]
     : [
         { label: 'HRV (RMSSD)' },

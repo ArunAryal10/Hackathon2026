@@ -6,8 +6,8 @@ Selects and ranks culturally-adapted nudges based on:
   - severity band
   - sub-scores (to surface secondary stressors)
 
-Nudges are supportive, not clinical. Izzat (family honor) is respected in
-financial nudges — scripts acknowledge obligation while suggesting sustainable limits.
+Nudges are supportive, not clinical. Financial nudges acknowledge family
+obligation while suggesting sustainable limits.
 """
 
 from __future__ import annotations
@@ -31,7 +31,7 @@ _NUDGES: dict[str, list[tuple[int, str, str | None]]] = {
         (
             2,
             "Track your monthly remittance as a percentage of income. "
-            "Aim to keep it under 15% to maintain financial resilience.",
+            "The global average is ~15% of earnings — staying near that level supports financial resilience.",
             "आफ्नो मासिक रेमिट्यान्स आम्दानीको प्रतिशतमा ट्र्याक गर्नुहोस्। १५% भित्र राख्ने लक्ष्य राख्नुहोस्।",
         ),
         (
@@ -51,19 +51,19 @@ _NUDGES: dict[str, list[tuple[int, str, str | None]]] = {
         (
             1,
             "Your HRV indicates elevated physiological stress. "
-            "Prioritize 7–9 hours of sleep tonight — even one night improves HRV.",
+            "Prioritize 7–9 hours of sleep — consistent rest over several nights begins to restore HRV.",
             "तपाईंको HRV उच्च शारीरिक तनाव देखाउँछ। आज रात ७–९ घण्टा सुत्ने प्रयास गर्नुहोस्।",
         ),
         (
             2,
-            "Try a 5-minute breathing exercise before bed: "
-            "inhale 4 counts, hold 4, exhale 6. This activates your parasympathetic system.",
+            "Try a 5-minute slow breathing exercise before bed: "
+            "inhale 5 counts, exhale 5 counts (~6 breaths/min). This activates your parasympathetic system.",
             "सुत्नुअघि ५ मिनेट श्वास व्यायाम गर्नुहोस्: ४ गन्ती श्वास लिनुस्, ४ रोक्नुस्, ६ मा छाड्नुस्।",
         ),
         (
             3,
             "Consistent sleep and wake times — even on weekends — "
-            "are the single most effective way to improve HRV over weeks.",
+            "are one of the most effective ways to improve HRV over weeks.",
             None,
         ),
     ],
@@ -82,8 +82,8 @@ _NUDGES: dict[str, list[tuple[int, str, str | None]]] = {
         ),
         (
             3,
-            "Even 20 minutes of moderate exercise 3x per week reduces "
-            "cortisol and improves mood measurably within 2 weeks.",
+            "Even 20 minutes of moderate exercise 3× per week "
+            "improves mood within days and reduces baseline cortisol over 8–12 weeks.",
             None,
         ),
     ],
@@ -91,7 +91,7 @@ _NUDGES: dict[str, list[tuple[int, str, str | None]]] = {
         (
             1,
             "You've reported high stress. Reach out to someone you trust today — "
-            "social connection is one of the fastest stress regulators.",
+            "social connection is one of the most powerful stress buffers.",
             "तपाईंले उच्च तनाव रिपोर्ट गर्नुभएको छ। आज कसैलाई सम्पर्क गर्नुहोस् — सामाजिक सम्बन्ध तनाव घटाउने सबैभन्दा छिटो उपाय हो।",
         ),
         (

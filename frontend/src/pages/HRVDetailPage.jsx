@@ -83,7 +83,7 @@ export default function HRVDetailPage() {
 
         {/* Key stats */}
         <div className="grid grid-cols-3 gap-3 mb-6">
-          <StatCard label="HRV (RMSSD)" value={rmssd} unit="ms" color={rmssdColor(rmssd)} target="Target ≥ 50ms" />
+          <StatCard label="HRV (RMSSD)" value={rmssd} unit="ms" color={rmssdColor(rmssd)} target="Target ≥ 42ms (age-dep.)" />
           <StatCard label="Sleep" value={sleep} unit="hrs" color={sleepColor(sleep)} target="Target 7.5–9hrs" />
           <StatCard label="Efficiency" value={efficiency} unit="%" color={effColor(efficiency)} target="Target ≥ 85%" />
         </div>
@@ -91,7 +91,7 @@ export default function HRVDetailPage() {
         {/* Bar chart */}
         <div className="bg-white rounded-2xl border border-gray-100 p-6 mb-6">
           <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-5">vs. targets</h2>
-          <GaugeBar label="HRV (RMSSD)" value={rmssd} max={100} color={rmssdColor(rmssd)} target={50} targetLabel="≥ 50ms" />
+          <GaugeBar label="HRV (RMSSD)" value={rmssd} max={100} color={rmssdColor(rmssd)} target={42} targetLabel="≥ 42ms (mean)" />
           <GaugeBar label="Sleep duration" value={sleep} max={10} color={sleepColor(sleep)} target={7.5} targetLabel="7.5 hrs" />
           <GaugeBar label="Sleep efficiency" value={efficiency} max={100} color={effColor(efficiency)} target={85} targetLabel="85%" />
         </div>
@@ -100,9 +100,10 @@ export default function HRVDetailPage() {
         <div className="bg-white rounded-2xl border border-gray-100 p-5 mb-8">
           <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3">What this means</h2>
           <p className="text-gray-700 text-sm leading-relaxed">
-            HRV (heart rate variability) reflects how well your nervous system recovers from stress.
-            Low RMSSD ({'<'}35ms) is linked to elevated allostatic load. Paired with poor sleep, it compounds
-            physical and emotional stress significantly.
+            HRV (heart rate variability) reflects how well your autonomic nervous system adapts to stress
+            (Kim et al., 2018). Lower RMSSD correlates with reduced vagal tone and higher cumulative physiological
+            stress (Andrew et al., 2021). Mean RMSSD for healthy adults is ~42ms but varies significantly by age
+            (Nunan et al., 2010). Paired with poor sleep, low HRV compounds physical and emotional stress.
           </p>
         </div>
 

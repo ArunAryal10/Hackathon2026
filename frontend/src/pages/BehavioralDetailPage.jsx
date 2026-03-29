@@ -76,9 +76,11 @@ export default function BehavioralDetailPage() {
         <div className="bg-white rounded-2xl border border-gray-100 p-5 mb-8">
           <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3">Why this matters</h2>
           <p className="text-gray-700 text-sm leading-relaxed">
-            High screen time combined with low physical activity is strongly linked to elevated cortisol and
-            disrupted sleep. Even small increases in daily steps (500–1000 more) show measurable HRV improvement
-            within 2 weeks.
+            High screen time combined with low physical activity is associated with elevated cortisol and
+            disrupted sleep (Weatherson et al., 2022). The WHO recommends ≥150 min/week of moderate exercise
+            (Bull et al., 2020). Regular moderate-intensity exercise over 8–12 weeks measurably improves HRV
+            and reduces baseline cortisol (Dong et al., 2024). Post-meal walking reduces blood glucose spikes
+            (DiPietro et al., 2013).
           </p>
         </div>
 

@@ -25,3 +25,7 @@ build/
 # Secrets
 .env
 backend/.env
+
+# Artifacts
+ngrok.exe
+=0.27.0

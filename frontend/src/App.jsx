@@ -16,6 +16,7 @@ import SelfReportPage from './pages/SelfReportPage'
 import RoutinePage from './pages/RoutinePage'
 import ScenarioPage from './pages/ScenarioPage'
 import PrivacyPage from './pages/PrivacyPage'
+import ResearchPage from './pages/ResearchPage'
 import NavBar from './components/NavBar'
 
 const ONBOARDING_ROUTES = ['/', '/why', '/get-started', '/login', '/permissions']
@@ -48,6 +49,7 @@ function Layout() {
           <Route path="/routine" element={<RoutinePage />} />
           <Route path="/scenario" element={<ScenarioPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/research" element={<ResearchPage />} />
         </Routes>
       </div>
       {showNav && <NavBar />}

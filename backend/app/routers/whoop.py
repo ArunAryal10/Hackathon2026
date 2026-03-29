@@ -27,6 +27,8 @@ class WhoopData(BaseModel):
     sleep_efficiency_pct: float
     resting_heart_rate: Optional[float] = None
     recovery_score: Optional[float] = None
+    strain_score: Optional[float] = None
+    exercise_mins_week: Optional[float] = None
     connected: bool = True
 
 
@@ -104,6 +106,8 @@ async def get_whoop_data():
     rmssd_ms = 40.0
     resting_hr = None
     recovery_score_val = None
+    strain_score_val = None
+    exercise_mins_week = None
     sleep_duration_hrs = 7.0
     sleep_efficiency_pct = 85.0
 
@@ -159,12 +163,39 @@ async def get_whoop_data():
                         )
                     break
 
+        # 4) Strain — from the most recent scored cycle
+        for cyc in cycles:
+            if cyc.get("score_state") == "SCORED" and cyc.get("score"):
+                strain_score_val = cyc["score"].get("strain")
+                break
+
+        # 5) Workouts — sum duration from last 7 days
+        wk_resp = await client.get(
+            f"{WHOOP_API_BASE}/activity/workout",
+            headers=headers,
+            params={"limit": 20},
+        )
+        if wk_resp.status_code == 200:
+            cutoff = datetime.now().astimezone().timestamp() - 7 * 86400
+            total_mins = 0.0
+            for wk in wk_resp.json().get("records", []):
+                if wk.get("start") and wk.get("end"):
+                    start = datetime.fromisoformat(wk["start"].replace("Z", "+00:00"))
+                    if start.timestamp() < cutoff:
+                        continue
+                    end = datetime.fromisoformat(wk["end"].replace("Z", "+00:00"))
+                    total_mins += (end - start).total_seconds() / 60
+            if total_mins > 0:
+                exercise_mins_week = total_mins
+
     return WhoopData(
         rmssd_ms=round(rmssd_ms, 1),
         sleep_duration_hrs=round(sleep_duration_hrs, 2),
         sleep_efficiency_pct=round(sleep_efficiency_pct, 1),
         resting_heart_rate=resting_hr,
         recovery_score=recovery_score_val,
+        strain_score=round(strain_score_val, 1) if strain_score_val is not None else None,
+        exercise_mins_week=round(exercise_mins_week, 0) if exercise_mins_week is not None else None,
         connected=True,
     )
 
@@ -184,38 +215,3 @@ def whoop_disconnect():
     return {"disconnected": True}
 
 
-@router.get("/probe")
-async def whoop_probe():
-    """Test all possible WHOOP API paths and return full responses."""
-    token = _token_store.get("access_token")
-    if not token:
-        return {"error": "no token"}
-
-    headers = {"Authorization": f"Bearer {token}"}
-    results = {}
-    paths = [
-        "/developer/v1/cycle",
-        "/developer/v1/cycle/1397891595/recovery",
-        "/developer/v1/cycle/1397891595/sleep",
-        "/developer/v1/recovery",
-        "/developer/v1/activity/sleep",
-        "/developer/v1/activity/workout",
-        "/developer/v1/user/measurement/body",
-        "/developer/v2/recovery",
-        "/developer/v2/activity/sleep",
-        "/developer/v2/cycle",
-        "/developer/v2/cycle/1397891595/recovery",
-        "/developer/v2/cycle/1397891595/sleep",
-        "/v2/recovery",
-        "/v2/activity/sleep",
-        "/v2/cycle",
-    ]
-    async with httpx.AsyncClient() as client:
-        for p in paths:
-            url = f"https://api.prod.whoop.com{p}"
-            r = await client.get(url, headers=headers, params={"limit": 1})
-            results[p] = {
-                "status": r.status_code,
-                "body": r.text[:500] if r.status_code == 200 else r.text[:100],
-            }
-    return results

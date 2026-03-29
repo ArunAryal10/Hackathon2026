@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom'
 import { isOnboarded } from '../utils/permissions'
 
 const STATS = [
-  { value: '56%',    label: 'of Nepali diaspora send >20% of income as remittance', color: '#ff5f1f' },
-  { value: '3×',     label: 'higher burnout risk for diaspora vs. non-remitters',    color: '#e040fb' },
-  { value: '1 in 3', label: 'Nepali migrants report moderate-severe distress',       color: '#d97706' },
+  { value: '77%',  label: 'of Nepali households depend on remittance income',         color: '#ff5f1f', cite: 'NLSS-IV, CBS Nepal 2022/23' },
+  { value: '39%',  label: 'of migrant workers globally report depression',            color: '#e040fb', cite: 'Liem et al., 2021 meta-analysis' },
+  { value: '27%',  label: 'of Nepal\'s GDP comes from remittances alone',             color: '#d97706', cite: 'World Bank, 2023' },
 ]
 
 export default function LandingPage() {
@@ -41,6 +41,7 @@ export default function LandingPage() {
                 style={{ boxShadow: '0 2px 12px rgba(0,0,0,0.07)', border: '1px solid #f0e4ff' }}>
                 <div className="text-2xl font-extrabold mb-1" style={{ color: s.color }}>{s.value}</div>
                 <div className="text-[11px] text-gray-700 leading-tight">{s.label}</div>
+                {s.cite && <div className="text-[9px] text-gray-400 mt-1 italic">{s.cite}</div>}
               </div>
             ))}
           </div>
@@ -63,6 +64,9 @@ export default function LandingPage() {
         <p className="text-center text-xs text-gray-700 mt-4">
           Already have an account?{' '}
           <button onClick={() => navigate('/login')} className="underline text-brand-500 font-medium">Sign in</button>
+        </p>
+        <p className="text-center text-xs text-gray-400 mt-2">
+          <button onClick={() => navigate('/research')} className="underline">View our research & evidence base</button>
         </p>
 
       </div>

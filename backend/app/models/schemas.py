@@ -59,7 +59,7 @@ class Nudge(BaseModel):
 class ScoreResponse(BaseModel):
     allostatic_load: float = Field(..., description="Composite score 0-100")
     band: str = Field(..., description="low / moderate / high / severe")
-    k6_equivalent: str = Field(..., description="K6 band label")
+    stress_level: str = Field(..., description="Human-readable stress band label")
     sub_scores: SubScores
     nudges: list[Nudge]
     dominant_stressor: str
