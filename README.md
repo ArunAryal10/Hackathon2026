@@ -40,6 +40,48 @@ Scores map to four bands: Low, Moderate, High, and Severe.
 4. Get nudges and a weekly routine tailored to your situation
 5. Explore resources if you need more support
 
+## Setup
+
+### Prerequisites
+
+- Python 3.11+
+- Node.js 18+
+
+### Backend
+
+```bash
+cd backend
+pip install -r requirements.txt
+cp .env.example .env        # add your GEMINI_API_KEY
+uvicorn app.main:app --reload --port 8000
+```
+
+API will be available at `http://localhost:8000`.
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+App will be available at `http://localhost:5173`.
+
+### Environment variables
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `GEMINI_API_KEY` | Yes (voice journal) | Google Gemini API key for voice analysis |
+
+### Demo profiles
+
+Load synthetic data without any real input — use the demo toggle on the home page to switch between:
+- **Profile A** — high stress (freelance income, heavy remittance burden, poor sleep/HRV)
+- **Profile B** — moderate stress (stable employment, moderate remittance, better health metrics)
+
+---
+
 ## Team
 
 Built at Hackathon 2026.
