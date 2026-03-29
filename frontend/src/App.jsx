@@ -17,9 +17,11 @@ import RoutinePage from './pages/RoutinePage'
 import ScenarioPage from './pages/ScenarioPage'
 import PrivacyPage from './pages/PrivacyPage'
 import ResearchPage from './pages/ResearchPage'
+import SignInPage from './pages/SignInPage'
+import MyScorePage from './pages/MyScorePage'
 import NavBar from './components/NavBar'
 
-const ONBOARDING_ROUTES = ['/', '/why', '/get-started', '/login', '/permissions']
+const ONBOARDING_ROUTES = ['/', '/why', '/get-started', '/login', '/permissions', '/signin']
 
 function Layout() {
   const { pathname } = useLocation()
@@ -35,9 +37,11 @@ function Layout() {
           <Route path="/get-started" element={<GetStartedPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/permissions" element={<PermissionsPage />} />
+          <Route path="/signin" element={<SignInPage />} />
 
           {/* Main app — NavBar visible */}
           <Route path="/home" element={<HomePage />} />
+          <Route path="/score" element={<MyScorePage />} />
           <Route path="/intake" element={<IntakePage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/resources/:band" element={<ResourcesPage />} />

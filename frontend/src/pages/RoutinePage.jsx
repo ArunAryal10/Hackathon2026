@@ -91,7 +91,7 @@ export default function RoutinePage() {
           </div>
           <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
             <div
-              className="h-full rounded-full bg-purple-500 transition-all duration-300"
+              className="h-full rounded-full bg-gray-900 transition-all duration-300"
               style={{ width: `${total > 0 ? (done / total) * 100 : 0}%` }}
             />
           </div>
@@ -111,8 +111,8 @@ export default function RoutinePage() {
                 <label key={item.id} className="flex items-start gap-3 cursor-pointer group">
                   <div className={`mt-0.5 w-5 h-5 rounded flex items-center justify-center flex-shrink-0 border transition-colors ${
                     checked[item.id]
-                      ? 'bg-brand-500 border-purple-600'
-                      : 'border-gray-300 group-hover:border-purple-500'
+                      ? 'bg-gray-900 border-gray-900'
+                      : 'border-gray-300 group-hover:border-gray-600'
                   }`}
                     onClick={() => toggle(item.id)}
                   >

@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router-dom'
 
 const FEATURES = [
-  { icon: '✅', label: 'Free forever',   desc: 'No subscription, no hidden fees',         bg: '#f0fdf4', color: '#16a34a' },
-  { icon: '🔒', label: '100% private',   desc: 'Data never leaves your device',           bg: '#fdf0ff', color: '#9333ea' },
-  { icon: '🌏', label: 'Bilingual',      desc: 'English + Nepali guidance',               bg: '#fff4ec', color: '#ff5f1f' },
-  { icon: '⚡', label: '2-min setup',    desc: 'Quick onboarding, instant insights',      bg: '#fffbeb', color: '#d97706' },
+  { icon: '🗓️', label: 'Build routines', desc: 'Weekly habit plans tailored to your life', bg: '#f5f5f5', color: '#111111' },
+  { icon: '🔒', label: '100% private',   desc: 'Data never leaves your device',           bg: '#f5f5f5', color: '#111111' },
+  { icon: '🌏', label: 'Bilingual',      desc: 'English + Nepali guidance',               bg: '#f5f5f5', color: '#111111' },
+  { icon: '⚡', label: '2-min setup',    desc: 'Quick onboarding, instant insights',      bg: '#f5f5f5', color: '#111111' },
 ]
 
 export default function GetStartedPage() {
@@ -29,7 +29,7 @@ export default function GetStartedPage() {
         <div className="grid grid-cols-2 gap-3 mb-8 flex-1">
           {FEATURES.map(f => (
             <div key={f.label} className="bg-white rounded-2xl p-4"
-              style={{ boxShadow: '0 2px 10px rgba(0,0,0,0.06)', border: `1px solid ${f.color}20` }}>
+              style={{ boxShadow: '0 2px 10px rgba(0,0,0,0.06)', border: '1px solid #e5e5e5' }}>
               <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl mb-3"
                 style={{ background: f.bg }}>
                 {f.icon}
@@ -42,7 +42,7 @@ export default function GetStartedPage() {
 
         {/* Quote */}
         <div className="bg-white rounded-2xl p-5 mb-6 text-center"
-          style={{ border: '1.5px solid #f0e4ff', boxShadow: '0 2px 12px rgba(140,60,200,0.08)' }}>
+          style={{ border: '1px solid #e5e5e5', boxShadow: '0 1px 4px rgba(0,0,0,0.06)' }}>
           <p className="text-sm font-medium text-gray-700 leading-relaxed italic">
             "Understanding your stress is the first step to managing it."
           </p>
@@ -53,11 +53,11 @@ export default function GetStartedPage() {
         <div className="flex justify-center gap-2 mb-8">
           <div className="w-2 h-2 rounded-full bg-gray-200" />
           <div className="w-2 h-2 rounded-full bg-gray-200" />
-          <div className="w-6 h-2 rounded-full bg-brand-500" />
+          <div className="w-6 h-2 rounded-full bg-gray-900" />
         </div>
 
         <button
-          onClick={() => navigate('/login')}
+          onClick={() => navigate('/permissions')}
           className="btn-fruity w-full py-4 rounded-2xl font-bold text-base"
         >
           Create account →
@@ -65,7 +65,7 @@ export default function GetStartedPage() {
 
         <p className="text-center text-xs text-gray-700 mt-4">
           Already have an account?{' '}
-          <button onClick={() => navigate('/login')} className="underline text-brand-500 font-medium">Sign in</button>
+          <button onClick={() => navigate('/signin')} className="underline font-medium" style={{ color: '#111111' }}>Sign in</button>
         </p>
 
       </div>

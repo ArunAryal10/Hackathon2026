@@ -2,15 +2,14 @@
 
 A stress-awareness tool built for the Nepali diaspora.
 
-MannChill measures allostatic load — the cumulative cost of chronic stress — across financial, physical, behavioral, and self-reported dimensions. It surfaces actionable nudges adapted to the cultural realities of Nepali life abroad.
+MannChill measures allostatic load, which is the cumulative cost of chronic stress across financial, physical, behavioral, and self-reported dimensions. It surfaces actionable nudges adapted to the cultural realities of Nepali life abroad.
 
 Not a clinical diagnostic tool. Designed to inform, not alarm.
 
 ## Why this exists
 
-Mental health tools rarely account for the specific pressures facing diaspora communities. For Nepali people living abroad, remittance burden — often 20–35% of income sent home to family — is one of the most consistent predictors of elevated stress. Standard wellness apps don't model this. MannChill does.
+Mental health tools rarely account for the specific pressures facing diaspora communities. For Nepali people living abroad, the remittance burden, often 20–35% of income sent home to family, is one of the most consistent predictors of elevated stress. Standard wellness apps don't model this. MannChill does.
 
-Nudges are written to respect *izzat* (इज्जत) — the value placed on family honor — rather than dismissing the obligation.
 
 ## What it measures
 
