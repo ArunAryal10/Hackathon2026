@@ -44,3 +44,28 @@ Scores map to four bands: Low, Moderate, High, and Severe.
 ## Team
 
 Built at Hackathon 2026.
+
+---
+
+## Privacy Policy
+
+*Last updated: March 29, 2026*
+
+**What MannChill does:** A stress-awareness tool for the Nepali diaspora. Not a clinical diagnostic tool.
+
+**Data we access when you connect WHOOP:**
+- Recovery data (HRV, resting heart rate, SpO2)
+- Sleep data (duration, efficiency, stages)
+- Cycle data (daily strain)
+
+We also collect self-reported mood/stress ratings and optional financial data entered manually. Voice journal recordings are processed for stress analysis and not stored permanently.
+
+**How we use your data:** Solely to calculate your stress score and generate personalized nudges. We do not sell or share your data with third parties for advertising.
+
+**Data storage:** MannChill is a demo application. Data is processed in-session and not persisted in a database. Wearable tokens are stored only for the duration of your session.
+
+**Third-party services:** We integrate with WHOOP (wearable data) and Google Gemini (voice journal analysis). We send only the minimum data required for each integration.
+
+**Your rights:** Disconnect your WHOOP account at any time to revoke access. Contact us at duwadisudan@gmail.com to request data deletion.
+
+**Contact:** duwadisudan@gmail.com
