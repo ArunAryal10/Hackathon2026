@@ -27,6 +27,17 @@ _PROFILES: dict[str, ScoreRequest] = {
         behavioral=BehavioralInput(screen_time_hrs=5.0, steps_per_day=6500, exercise_mins_per_week=90.0),
         self_report=SelfReportInput(stress_rating=5, mood_rating=6),
     ),
+    "profile_c": ScoreRequest(
+        hrv_sleep=HRVSleepInput(rmssd_ms=65.0, sleep_duration_hrs=8.0, sleep_efficiency_pct=91.0),
+        financial=FinancialInput(
+            monthly_income_usd=4000,
+            monthly_remittance_usd=280,   # 7% of income
+            total_debt_usd=2000,           # 0.5x monthly income
+            income_stability=0.95,
+        ),
+        behavioral=BehavioralInput(screen_time_hrs=2.5, steps_per_day=10000, exercise_mins_per_week=180.0),
+        self_report=SelfReportInput(stress_rating=2, mood_rating=8),
+    ),
 }
 
 
