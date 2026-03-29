@@ -9,10 +9,10 @@ function RatingDisplay({ label, value, max, lowLabel, highLabel, invert }) {
     : value >= 8 ? '#4ade80' : value >= 6 ? '#facc15' : value >= 4 ? '#fb923c' : '#f87171'
 
   return (
-    <div className="bg-gray-900 rounded-2xl border border-gray-800 p-5 mb-4">
+    <div className="bg-white rounded-2xl border border-gray-100 p-5 mb-4">
       <div className="flex items-center justify-between mb-4">
-        <span className="text-sm text-gray-300">{label}</span>
-        <span className="text-3xl font-bold" style={{ color }}>{value}<span className="text-gray-500 text-base font-normal">/{max}</span></span>
+        <span className="text-sm text-gray-700">{label}</span>
+        <span className="text-3xl font-bold" style={{ color }}>{value}<span className="text-gray-700 text-base font-normal">/{max}</span></span>
       </div>
       <div className="flex gap-1 mb-2">
         {Array.from({ length: max }).map((_, i) => (
@@ -23,7 +23,7 @@ function RatingDisplay({ label, value, max, lowLabel, highLabel, invert }) {
           />
         ))}
       </div>
-      <div className="flex justify-between text-xs text-gray-600">
+      <div className="flex justify-between text-xs text-gray-800">
         <span>{lowLabel}</span>
         <span>{highLabel}</span>
       </div>
@@ -46,15 +46,15 @@ export default function SelfReportPage() {
   const combined = stress >= 7 && mood <= 4
 
   return (
-    <div className="min-h-screen bg-gray-950 py-10 px-4">
+    <div className="min-h-screen bg-cream-100 py-10 px-4">
       <div className="max-w-2xl mx-auto">
 
         <div className="text-center mb-8">
           <div className="text-3xl mb-2">🧠</div>
-          <h1 className="text-2xl font-bold text-white mb-1">Self-Report</h1>
-          <p className="text-gray-500 text-xs">How you rated yourself at intake</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-1">Self-Report</h1>
+          <p className="text-gray-700 text-xs">How you rated yourself at intake</p>
           {score !== undefined && (
-            <div className="mt-2 inline-block px-3 py-1 rounded-full bg-gray-800 text-gray-300 text-xs">
+            <div className="mt-2 inline-block px-3 py-1 rounded-full bg-white text-gray-700 text-xs">
               Sub-score: <span className="font-semibold" style={{ color: scoreColor(score) }}>{Math.round(score)}/100</span> stress load
             </div>
           )}
@@ -76,23 +76,23 @@ export default function SelfReportPage() {
 
         {combined && (
           <div className="bg-red-900/20 border border-red-800 rounded-2xl p-4 mb-6">
-            <p className="text-sm text-red-300 leading-relaxed">
+            <p className="text-sm text-red-600 leading-relaxed">
               High stress + low mood together are a meaningful signal. The resources page has
               culturally-grounded support options that may help.
             </p>
           </div>
         )}
 
-        <div className="bg-gray-900 rounded-2xl border border-gray-800 p-5 mb-8">
-          <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-3">About self-report</h2>
-          <p className="text-gray-400 text-sm leading-relaxed">
+        <div className="bg-white rounded-2xl border border-gray-100 p-5 mb-8">
+          <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3">About self-report</h2>
+          <p className="text-gray-700 text-sm leading-relaxed">
             Self-reported stress and mood validate the objective signals from HRV and behavioral data.
             They carry 15% of your total score — meaningful, but balanced against measurable data
             to reduce recency bias.
           </p>
         </div>
 
-        <button onClick={() => navigate(-1)} className="w-full py-3 rounded-xl border border-gray-700 text-gray-300 hover:bg-gray-800 transition-colors text-sm">
+        <button onClick={() => navigate(-1)} className="w-full py-3 rounded-xl border border-gray-200 text-gray-700 hover:bg-white transition-colors text-sm">
           ← Back
         </button>
 

@@ -29,7 +29,7 @@ function TrendBadge({ today, yesterday, higherIsBad = true }) {
   if (!dir) return null
   const bad = (dir === 'up' && higherIsBad) || (dir === 'down' && !higherIsBad)
   return (
-    <span className={`ml-2 text-xs px-1.5 py-0.5 rounded font-medium ${bad ? 'bg-red-900/40 text-red-400' : 'bg-green-900/40 text-green-400'}`}>
+    <span className={`ml-2 text-xs px-1.5 py-0.5 rounded font-medium ${bad ? 'bg-red-50 text-red-600 border border-red-200' : 'bg-green-50 text-green-700 border border-green-200'}`}>
       {dir === 'up' ? '↑' : '↓'} vs yesterday
     </span>
   )
@@ -38,8 +38,8 @@ function TrendBadge({ today, yesterday, higherIsBad = true }) {
 function Field({ label, hint, children }) {
   return (
     <div className="mb-5">
-      <label className="block text-sm font-medium text-gray-300 mb-1">{label}</label>
-      {hint && <p className="text-xs text-gray-500 mb-2">{hint}</p>}
+      <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+      {hint && <p className="text-xs text-gray-700 mb-2">{hint}</p>}
       {children}
     </div>
   )
@@ -55,7 +55,7 @@ function Input({ value, onChange, placeholder, type = 'number', min, max, step }
       min={min}
       max={max}
       step={step}
-      className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-colors"
+      className="w-full bg-white border border-gray-200 rounded-lg px-4 py-2.5 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-colors"
     />
   )
 }
@@ -72,7 +72,7 @@ function RangeField({ label, hint, value, onChange, min, max, step = 1, leftLabe
         onChange={onChange}
         className="w-full accent-purple-500"
       />
-      <div className="flex justify-between text-xs text-gray-500 mt-1">
+      <div className="flex justify-between text-xs text-gray-700 mt-1">
         <span>{leftLabel}</span>
         <span>{rightLabel}</span>
       </div>
@@ -82,12 +82,12 @@ function RangeField({ label, hint, value, onChange, min, max, step = 1, leftLabe
 
 function Section({ title, emoji, source, children }) {
   return (
-    <div className="bg-gray-900 rounded-2xl p-6 mb-6 border border-gray-800">
+    <div className="bg-white rounded-2xl p-6 mb-6 border border-gray-100">
       <div className="flex items-center justify-between mb-5">
-        <h2 className="text-lg font-semibold text-white">
+        <h2 className="text-lg font-semibold text-gray-900">
           <span className="mr-2">{emoji}</span>{title}
         </h2>
-        {source && <span className="text-xs text-gray-600 bg-gray-800 px-2 py-0.5 rounded-full">{source}</span>}
+        {source && <span className="text-xs text-gray-800 bg-white px-2 py-0.5 rounded-full">{source}</span>}
       </div>
       {children}
     </div>
@@ -158,39 +158,39 @@ export default function IntakePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 py-10 px-4">
+    <div className="min-h-screen bg-cream-100 py-10 px-4">
       <div className="max-w-2xl mx-auto">
 
         {/* Header */}
         <div className="mb-6 text-center">
-          <h1 className="text-3xl font-bold text-white mb-2">Today's Data</h1>
-          <div className="flex items-center justify-center gap-2 text-xs text-gray-500">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Today's Data</h1>
+          <div className="flex items-center justify-center gap-2 text-xs text-gray-700">
             <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse inline-block" />
             <span>Auto-synced · {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}</span>
           </div>
-          <p className="text-gray-600 text-xs mt-1">Sources: Apple Health · Screen Time · Manual</p>
+          <p className="text-gray-800 text-xs mt-1">Sources: Apple Health · Screen Time · Manual</p>
         </div>
 
         {/* Demo shortcuts */}
-        <div className="bg-gray-900 rounded-2xl p-5 mb-6 border border-purple-900">
-          <p className="text-sm text-purple-300 font-medium mb-3">Quick demo — load a synthetic profile</p>
+        <div className="bg-white rounded-2xl p-5 mb-6 border border-brand-200">
+          <p className="text-sm text-brand-400 font-medium mb-3">Quick demo — load a synthetic profile</p>
           <div className="flex gap-3">
             <button
               onClick={() => loadDemo('profile_a')}
-              className="flex-1 py-2 rounded-lg bg-red-900/40 text-red-300 border border-red-800 text-sm hover:bg-red-900/60 transition-colors"
+              className="flex-1 py-2 rounded-lg bg-red-50 text-red-700 border border-red-200 text-sm hover:bg-red-100 transition-colors"
             >
               Profile A — High stress
             </button>
             <button
               onClick={() => loadDemo('profile_b')}
-              className="flex-1 py-2 rounded-lg bg-green-900/40 text-green-300 border border-green-800 text-sm hover:bg-green-900/60 transition-colors"
+              className="flex-1 py-2 rounded-lg bg-green-50 text-green-700 border border-green-200 text-sm hover:bg-green-100 transition-colors"
             >
               Profile B — Moderate stress
             </button>
           </div>
         </div>
 
-        <div className="text-center text-gray-600 text-sm mb-6">— or enter your own data —</div>
+        <div className="text-center text-gray-800 text-sm mb-6">— or enter your own data —</div>
 
         <form onSubmit={handleSubmit}>
 
@@ -269,7 +269,7 @@ export default function IntakePage() {
           </Section>
 
           {error && (
-            <div className="bg-red-900/30 border border-red-700 text-red-300 rounded-lg px-4 py-3 mb-4 text-sm">
+            <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 mb-4 text-sm">
               {error}
             </div>
           )}
@@ -277,7 +277,7 @@ export default function IntakePage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3.5 rounded-xl bg-purple-600 hover:bg-purple-500 disabled:bg-purple-900 disabled:text-purple-400 text-white font-semibold text-base transition-colors"
+            className="w-full py-3.5 rounded-xl bg-brand-500 hover:bg-brand-400 disabled:bg-purple-900 disabled:text-brand-500 text-gray-900 font-semibold text-base transition-colors"
           >
             {loading ? 'Calculating…' : 'Calculate my score →'}
           </button>

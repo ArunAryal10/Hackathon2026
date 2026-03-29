@@ -74,22 +74,22 @@ export default function RoutinePage() {
   const done = Object.values(checked).filter(Boolean).length
 
   return (
-    <div className="min-h-screen bg-gray-950 py-10 px-4">
+    <div className="min-h-screen bg-cream-100 py-10 px-4">
       <div className="max-w-2xl mx-auto">
 
         <div className="text-center mb-8">
           <div className="text-3xl mb-2">✅</div>
-          <h1 className="text-2xl font-bold text-white mb-1">Weekly Routine</h1>
-          <p className="text-gray-500 text-xs">Check off actions as you go — saved in your browser</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-1">Weekly Routine</h1>
+          <p className="text-gray-700 text-xs">Check off actions as you go — saved in your browser</p>
         </div>
 
         {/* Progress */}
-        <div className="bg-gray-900 rounded-2xl border border-gray-800 p-5 mb-6">
+        <div className="bg-white rounded-2xl border border-gray-100 p-5 mb-6">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-gray-300">This week's progress</span>
-            <span className="text-sm font-semibold text-white">{done}/{total}</span>
+            <span className="text-sm text-gray-700">This week's progress</span>
+            <span className="text-sm font-semibold text-gray-900">{done}/{total}</span>
           </div>
-          <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
+          <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
             <div
               className="h-full rounded-full bg-purple-500 transition-all duration-300"
               style={{ width: `${total > 0 ? (done / total) * 100 : 0}%` }}
@@ -102,8 +102,8 @@ export default function RoutinePage() {
 
         {/* Action categories */}
         {ACTIONS.map(cat => (
-          <div key={cat.category} className="bg-gray-900 rounded-2xl border border-gray-800 p-5 mb-4">
-            <h2 className="text-sm font-semibold text-white mb-3">
+          <div key={cat.category} className="bg-white rounded-2xl border border-gray-100 p-5 mb-4">
+            <h2 className="text-sm font-semibold text-gray-900 mb-3">
               <span className="mr-2">{cat.emoji}</span>{cat.category}
             </h2>
             <div className="space-y-3">
@@ -111,8 +111,8 @@ export default function RoutinePage() {
                 <label key={item.id} className="flex items-start gap-3 cursor-pointer group">
                   <div className={`mt-0.5 w-5 h-5 rounded flex items-center justify-center flex-shrink-0 border transition-colors ${
                     checked[item.id]
-                      ? 'bg-purple-600 border-purple-600'
-                      : 'border-gray-600 group-hover:border-purple-500'
+                      ? 'bg-brand-500 border-purple-600'
+                      : 'border-gray-300 group-hover:border-purple-500'
                   }`}
                     onClick={() => toggle(item.id)}
                   >
@@ -123,7 +123,7 @@ export default function RoutinePage() {
                     )}
                   </div>
                   <span
-                    className={`text-sm leading-relaxed transition-colors ${checked[item.id] ? 'text-gray-500 line-through' : 'text-gray-300'}`}
+                    className={`text-sm leading-relaxed transition-colors ${checked[item.id] ? 'text-gray-400 line-through' : 'text-gray-900'}`}
                     onClick={() => toggle(item.id)}
                   >
                     {item.text}
@@ -136,12 +136,12 @@ export default function RoutinePage() {
 
         <button
           onClick={clearAll}
-          className="w-full py-3 rounded-xl border border-gray-700 text-gray-500 hover:text-gray-300 hover:bg-gray-800 transition-colors text-sm mb-3"
+          className="w-full py-3 rounded-xl border border-gray-200 text-gray-700 hover:text-gray-300 hover:bg-white transition-colors text-sm mb-3"
         >
           Reset for new week
         </button>
 
-        <button onClick={() => navigate(-1)} className="w-full py-3 rounded-xl border border-gray-700 text-gray-300 hover:bg-gray-800 transition-colors text-sm">
+        <button onClick={() => navigate(-1)} className="w-full py-3 rounded-xl border border-gray-200 text-gray-700 hover:bg-white transition-colors text-sm">
           ← Back
         </button>
 

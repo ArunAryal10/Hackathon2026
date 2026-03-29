@@ -3,13 +3,13 @@ import { RadialBarChart, RadialBar, ResponsiveContainer, Tooltip } from 'rechart
 
 function StatCard({ label, value, unit, target, color }) {
   return (
-    <div className="bg-gray-900 rounded-2xl border border-gray-800 p-5">
-      <p className="text-xs text-gray-500 mb-1">{label}</p>
+    <div className="bg-white rounded-2xl border border-gray-100 p-5">
+      <p className="text-xs text-gray-700 mb-1">{label}</p>
       <div className="flex items-end gap-1 mb-1">
         <span className="text-3xl font-bold" style={{ color }}>{value}</span>
-        <span className="text-gray-400 text-sm mb-1">{unit}</span>
+        <span className="text-gray-700 text-sm mb-1">{unit}</span>
       </div>
-      <p className="text-xs text-gray-600">{target}</p>
+      <p className="text-xs text-gray-800">{target}</p>
     </div>
   )
 }
@@ -23,11 +23,11 @@ function GaugeBar({ label, value, max, color, target, targetLabel }) {
         <span className="text-gray-300">{label}</span>
         <span className="font-semibold" style={{ color }}>{value}</span>
       </div>
-      <div className="relative h-3 bg-gray-800 rounded-full overflow-hidden">
+      <div className="relative h-3 bg-white rounded-full overflow-hidden">
         <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, backgroundColor: color }} />
         <div className="absolute top-0 h-full w-0.5 bg-white/40" style={{ left: `${targetPct}%` }} />
       </div>
-      <p className="text-xs text-gray-600 mt-1">Target: {targetLabel}</p>
+      <p className="text-xs text-gray-800 mt-1">Target: {targetLabel}</p>
     </div>
   )
 }
@@ -67,16 +67,16 @@ export default function HRVDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 py-10 px-4">
+    <div className="min-h-screen bg-cream-100 py-10 px-4">
       <div className="max-w-2xl mx-auto">
 
         <div className="text-center mb-8">
           <div className="text-3xl mb-2">💓</div>
-          <h1 className="text-2xl font-bold text-white mb-1">HRV & Sleep</h1>
-          <p className="text-gray-500 text-xs">Physiological stress signals</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-1">HRV & Sleep</h1>
+          <p className="text-gray-700 text-xs">Physiological stress signals</p>
           {score !== undefined && (
-            <div className="mt-2 inline-block px-3 py-1 rounded-full bg-gray-800 text-gray-300 text-xs">
-              Sub-score: <span className="font-semibold text-white">{Math.round(score)}/100</span> stress load
+            <div className="mt-2 inline-block px-3 py-1 rounded-full bg-white text-gray-700 text-xs">
+              Sub-score: <span className="font-semibold text-gray-900">{Math.round(score)}/100</span> stress load
             </div>
           )}
         </div>
@@ -89,24 +89,24 @@ export default function HRVDetailPage() {
         </div>
 
         {/* Bar chart */}
-        <div className="bg-gray-900 rounded-2xl border border-gray-800 p-6 mb-6">
-          <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-5">vs. targets</h2>
+        <div className="bg-white rounded-2xl border border-gray-100 p-6 mb-6">
+          <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-5">vs. targets</h2>
           <GaugeBar label="HRV (RMSSD)" value={rmssd} max={100} color={rmssdColor(rmssd)} target={50} targetLabel="≥ 50ms" />
           <GaugeBar label="Sleep duration" value={sleep} max={10} color={sleepColor(sleep)} target={7.5} targetLabel="7.5 hrs" />
           <GaugeBar label="Sleep efficiency" value={efficiency} max={100} color={effColor(efficiency)} target={85} targetLabel="85%" />
         </div>
 
         {/* Context */}
-        <div className="bg-gray-900 rounded-2xl border border-gray-800 p-5 mb-8">
-          <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-3">What this means</h2>
-          <p className="text-gray-400 text-sm leading-relaxed">
+        <div className="bg-white rounded-2xl border border-gray-100 p-5 mb-8">
+          <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3">What this means</h2>
+          <p className="text-gray-700 text-sm leading-relaxed">
             HRV (heart rate variability) reflects how well your nervous system recovers from stress.
             Low RMSSD ({'<'}35ms) is linked to elevated allostatic load. Paired with poor sleep, it compounds
             physical and emotional stress significantly.
           </p>
         </div>
 
-        <button onClick={() => navigate(-1)} className="w-full py-3 rounded-xl border border-gray-700 text-gray-300 hover:bg-gray-800 transition-colors text-sm">
+        <button onClick={() => navigate(-1)} className="w-full py-3 rounded-xl border border-gray-200 text-gray-700 hover:bg-white transition-colors text-sm">
           ← Back
         </button>
 

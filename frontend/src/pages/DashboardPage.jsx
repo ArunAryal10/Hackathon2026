@@ -5,10 +5,10 @@ import {
 import { scoreColor, STRESS_COLORS } from '../utils/colors'
 
 const BAND_COLORS = {
-  low:      { bg: 'bg-green-900/30',  border: 'border-green-700',  text: 'text-green-400',  hex: STRESS_COLORS.low },
-  moderate: { bg: 'bg-yellow-900/30', border: 'border-yellow-700', text: 'text-yellow-400', hex: STRESS_COLORS.moderate },
-  high:     { bg: 'bg-orange-900/30', border: 'border-orange-700', text: 'text-orange-400', hex: STRESS_COLORS.high },
-  severe:   { bg: 'bg-red-900/30',    border: 'border-red-700',    text: 'text-red-400',    hex: STRESS_COLORS.severe },
+  low:      { bg: 'bg-green-50',  border: 'border-green-200',  text: 'text-green-700',  hex: STRESS_COLORS.low },
+  moderate: { bg: 'bg-yellow-50', border: 'border-yellow-200', text: 'text-yellow-700', hex: STRESS_COLORS.moderate },
+  high:     { bg: 'bg-orange-50', border: 'border-orange-200', text: 'text-orange-700', hex: STRESS_COLORS.high },
+  severe:   { bg: 'bg-red-50',    border: 'border-red-200',    text: 'text-red-700',    hex: STRESS_COLORS.severe },
 }
 
 // ─── Gauge (SVG arc) ───────────────────────────────────────────────────────
@@ -93,18 +93,18 @@ const CATEGORY_EMOJI = {
 }
 
 function NudgeCard({ nudge }) {
-  const band = nudge.priority === 1 ? 'border-purple-700 bg-purple-900/20'
-    : nudge.priority === 2 ? 'border-gray-700 bg-gray-800/40'
-    : 'border-gray-800 bg-gray-900/30'
+  const band = nudge.priority === 1 ? 'border-brand-300 bg-purple-900/20'
+    : nudge.priority === 2 ? 'border-gray-200 bg-gray-800/40'
+    : 'border-gray-100 bg-white'
 
   return (
     <div className={`rounded-xl border p-4 mb-3 ${band}`}>
       <div className="flex items-start gap-3">
         <span className="text-xl">{CATEGORY_EMOJI[nudge.category] || '💡'}</span>
         <div>
-          <p className="text-sm text-gray-200 leading-relaxed">{nudge.message_en}</p>
+          <p className="text-sm text-gray-800 leading-relaxed">{nudge.message_en}</p>
           {nudge.message_ne && (
-            <p className="text-xs text-gray-500 mt-1">{nudge.message_ne}</p>
+            <p className="text-xs text-gray-700 mt-1">{nudge.message_ne}</p>
           )}
         </div>
       </div>
@@ -133,13 +133,13 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 py-10 px-4">
+    <div className="min-h-screen bg-cream-100 py-10 px-4">
       <div className="max-w-2xl mx-auto">
 
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-white mb-1">MannChill</h1>
-          <p className="text-gray-500 text-xs">Allostatic Load Assessment</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-1">MannChill</h1>
+          <p className="text-gray-700 text-xs">Allostatic Load Assessment</p>
         </div>
 
         {/* Score card */}
@@ -148,31 +148,31 @@ export default function DashboardPage() {
           <div className={`inline-block mt-3 px-4 py-1 rounded-full text-sm font-semibold ${band.bg} ${band.border} border ${band.text}`}>
             {r.band.toUpperCase()} — {r.k6_equivalent}
           </div>
-          <p className="text-gray-400 text-sm mt-3">
-            Primary stressor: <span className="text-white font-medium">{DOMINANT_LABELS[r.dominant_stressor] || r.dominant_stressor}</span>
+          <p className="text-gray-700 text-sm mt-3">
+            Primary stressor: <span className="text-gray-900 font-medium">{DOMINANT_LABELS[r.dominant_stressor] || r.dominant_stressor}</span>
           </p>
         </div>
 
         {/* Sub-score breakdown */}
-        <div className="bg-gray-900 rounded-2xl border border-gray-800 p-6 mb-6">
-          <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-4">Score breakdown</h2>
+        <div className="bg-white rounded-2xl border border-gray-100 p-6 mb-6">
+          <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-4">Score breakdown</h2>
           <SubScoreChart subScores={r.sub_scores} />
-          <p className="text-xs text-gray-500 mt-3 text-center">
+          <p className="text-xs text-gray-700 mt-3 text-center">
             Weights: Financial 40% · HRV+Sleep 25% · Behavioral 20% · Self-report 15%
           </p>
         </div>
 
         {/* Nudges */}
-        <div className="bg-gray-900 rounded-2xl border border-gray-800 p-6 mb-6">
-          <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-4">What you can do</h2>
+        <div className="bg-white rounded-2xl border border-gray-100 p-6 mb-6">
+          <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-4">What you can do</h2>
           {r.nudges.map((nudge, i) => (
             <NudgeCard key={i} nudge={nudge} />
           ))}
         </div>
 
         {/* Spectrum context */}
-        <div className="bg-gray-900 rounded-2xl border border-gray-800 p-5 mb-8">
-          <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-3">Stress spectrum</h2>
+        <div className="bg-white rounded-2xl border border-gray-100 p-5 mb-8">
+          <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3">Stress spectrum</h2>
           <div className="relative h-4 rounded-full overflow-hidden"
             style={{ background: 'linear-gradient(to right, #4ade80, #facc15, #fb923c, #f87171)' }}>
             <div
@@ -180,14 +180,14 @@ export default function DashboardPage() {
               style={{ left: `calc(${r.allostatic_load}% - 6px)` }}
             />
           </div>
-          <div className="flex justify-between text-xs text-gray-500 mt-1">
+          <div className="flex justify-between text-xs text-gray-700 mt-1">
             <span>Low (0)</span><span>Moderate (26)</span><span>High (51)</span><span>Severe (76–100)</span>
           </div>
         </div>
 
         {/* Detail drill-downs */}
-        <div className="bg-gray-900 rounded-2xl border border-gray-800 p-5 mb-6">
-          <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-3">Explore details</h2>
+        <div className="bg-white rounded-2xl border border-gray-100 p-5 mb-6">
+          <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3">Explore details</h2>
           <div className="grid grid-cols-2 gap-2">
             {[
               { label: '💓 HRV & Sleep', path: '/detail/hrv' },
@@ -201,7 +201,7 @@ export default function DashboardPage() {
               <button
                 key={path}
                 onClick={() => navigate(path, { state })}
-                className="py-2.5 px-3 rounded-xl border border-gray-700 text-gray-300 hover:bg-gray-800 hover:border-gray-600 transition-colors text-sm text-left"
+                className="py-2.5 px-3 rounded-xl border border-gray-200 text-gray-700 hover:bg-white hover:border-gray-300 transition-colors text-sm text-left"
               >
                 {label}
               </button>
@@ -212,13 +212,13 @@ export default function DashboardPage() {
         <div className="flex gap-3">
           <button
             onClick={() => navigate(`/resources/${r.band}`)}
-            className="flex-1 py-3 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-semibold transition-colors text-sm"
+            className="flex-1 py-3 rounded-xl bg-brand-500 hover:bg-brand-400 text-gray-900 font-semibold transition-colors text-sm"
           >
             View resources →
           </button>
           <button
             onClick={() => navigate('/intake')}
-            className="flex-1 py-3 rounded-xl border border-gray-700 text-gray-300 hover:bg-gray-800 transition-colors text-sm"
+            className="flex-1 py-3 rounded-xl border border-gray-200 text-gray-700 hover:bg-white transition-colors text-sm"
           >
             ← Recalculate
           </button>

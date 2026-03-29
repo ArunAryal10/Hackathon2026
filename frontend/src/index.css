@@ -4,8 +4,62 @@
 
 body {
   margin: 0;
-  background-color: #0f0f14;
-  color: #f3f4f6;
+  background-color: #fef9f4;
+  color: #111111;
   font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
+}
+
+/* Force all text dark unless explicitly overridden */
+p, span, div, label, li, h1, h2, h3, h4, h5, h6, button, input, select, textarea {
+  color: inherit;
+}
+
+/* Muted secondary text — still readable */
+.text-muted {
+  color: #555555;
+}
+
+/* ── Sparkling gradient text ───────────────────────────────────────── */
+.text-fruity {
+  background: linear-gradient(135deg, #ff5f1f 0%, #e040fb 60%, #d97706 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-mango {
+  background: linear-gradient(90deg, #ff5f1f, #ff9662);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Gradient button ───────────────────────────────────────────────── */
+.btn-fruity {
+  background: linear-gradient(135deg, #ff5f1f 0%, #e040fb 100%);
+  transition: opacity 0.2s, transform 0.1s, box-shadow 0.2s;
+  box-shadow: 0 4px 20px rgba(255, 95, 31, 0.35), 0 2px 8px rgba(224, 64, 251, 0.2);
+  border: none;
+  color: white;
+}
+.btn-fruity:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 28px rgba(255, 95, 31, 0.45), 0 4px 16px rgba(224, 64, 251, 0.3);
+}
+
+/* ── Section divider ───────────────────────────────────────────────── */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #f0e4ff, #ffe4d0, #f0e4ff, transparent);
+  margin: 2rem 0;
+}
+
+/* ── Light card ────────────────────────────────────────────────────── */
+.card-light {
+  background: #ffffff;
+  border: 1px solid #f0e4ff;
+  border-radius: 1rem;
+  box-shadow: 0 2px 12px rgba(140, 60, 200, 0.06);
 }

@@ -1,5 +1,7 @@
 import { Routes, Route, useLocation } from 'react-router-dom'
 import LandingPage from './pages/LandingPage'
+import WhyPage from './pages/WhyPage'
+import GetStartedPage from './pages/GetStartedPage'
 import LoginPage from './pages/LoginPage'
 import PermissionsPage from './pages/PermissionsPage'
 import HomePage from './pages/HomePage'
@@ -15,7 +17,7 @@ import RoutinePage from './pages/RoutinePage'
 import ScenarioPage from './pages/ScenarioPage'
 import NavBar from './components/NavBar'
 
-const ONBOARDING_ROUTES = ['/', '/login', '/permissions']
+const ONBOARDING_ROUTES = ['/', '/why', '/get-started', '/login', '/permissions']
 
 function Layout() {
   const { pathname } = useLocation()
@@ -27,6 +29,8 @@ function Layout() {
         <Routes>
           {/* Onboarding — no NavBar */}
           <Route path="/" element={<LandingPage />} />
+          <Route path="/why" element={<WhyPage />} />
+          <Route path="/get-started" element={<GetStartedPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/permissions" element={<PermissionsPage />} />
 

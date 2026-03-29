@@ -36,7 +36,6 @@ function syntheticMonth(base) {
   const scores = randomWalk(base, 30, 14, -4)
   return scores.map((score, i) => {
     const d = new Date(today); d.setDate(d.getDate() - (29 - i))
-    // Only label every 7th point to avoid clutter
     const label = i % 7 === 0
       ? d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
       : ''
@@ -54,7 +53,7 @@ function syntheticYear(base) {
   })
 }
 
-// ─── Stats row (like Garmin/Whoop) ───────────────────────────────────────────
+// ─── Stats row ────────────────────────────────────────────────────────────────
 function TrendStats({ data }) {
   const scores = data.map(d => d.score)
   const min = Math.min(...scores)
@@ -67,8 +66,9 @@ function TrendStats({ data }) {
         { label: 'AVG', value: avg, color: scoreColor(avg) },
         { label: 'MAX', value: max, color: scoreColor(max) },
       ].map(({ label, value, color }) => (
-        <div key={label} className="bg-gray-800/60 rounded-xl p-3 text-center">
-          <p className="text-xs text-gray-500 mb-1">{label}</p>
+        <div key={label} className="rounded-xl p-3 text-center"
+          style={{ background: '#faf5ff', border: '1px solid #f0e4ff' }}>
+          <p className="text-xs mb-1" style={{ color: '#555555' }}>{label}</p>
           <p className="text-xl font-bold" style={{ color }}>{value}</p>
         </div>
       ))}
@@ -77,7 +77,7 @@ function TrendStats({ data }) {
 }
 
 // ─── Trend chart ─────────────────────────────────────────────────────────────
-const TABS = ['1W', '1M', '1Y']
+const TREND_TABS = ['1W', '1M', '1Y']
 
 function TrendCard({ weekData, monthData, yearData }) {
   const [tab, setTab] = useState('1W')
@@ -86,25 +86,27 @@ function TrendCard({ weekData, monthData, yearData }) {
   const isYear = tab === '1Y'
 
   const tooltipStyle = {
-    contentStyle: { background: '#111827', border: '1px solid #374151', borderRadius: 8 },
-    labelStyle: { color: '#f3f4f6', fontSize: 11 },
-    itemStyle: { color: '#a78bfa', fontSize: 11 },
+    contentStyle: { background: '#ffffff', border: '1px solid #f0e4ff', borderRadius: 10, boxShadow: '0 4px 16px rgba(0,0,0,0.1)' },
+    labelStyle: { color: '#111111', fontSize: 11, fontWeight: 600 },
+    itemStyle: { color: '#ff5f1f', fontSize: 11 },
   }
 
   return (
-    <div className="bg-gray-900 rounded-2xl border border-gray-800 p-5 mb-4">
+    <div className="bg-white rounded-2xl p-5 mb-4"
+      style={{ boxShadow: '0 2px 16px rgba(140,60,200,0.08)', border: '1px solid #f0e4ff' }}>
 
-      {/* Header + tab switcher */}
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">Stress trend</h2>
-        <div className="flex bg-gray-800 rounded-lg p-0.5 gap-0.5">
-          {TABS.map(t => (
+        <h2 className="text-sm font-semibold uppercase tracking-wider" style={{ color: '#555555' }}>Stress trend</h2>
+        <div className="flex rounded-xl p-0.5 gap-0.5" style={{ background: '#faf5ff' }}>
+          {TREND_TABS.map(t => (
             <button
               key={t}
               onClick={() => setTab(t)}
-              className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${
-                tab === t ? 'bg-purple-600 text-white' : 'text-gray-400 hover:text-gray-200'
-              }`}
+              className="px-3 py-1 rounded-lg text-xs font-semibold transition-all"
+              style={tab === t
+                ? { background: 'linear-gradient(135deg, #ff5f1f, #e040fb)', color: 'white' }
+                : { color: '#555555' }
+              }
             >
               {t}
             </button>
@@ -112,18 +114,17 @@ function TrendCard({ weekData, monthData, yearData }) {
         </div>
       </div>
 
-      {/* Chart */}
       <ResponsiveContainer width="100%" height={150}>
         {isYear ? (
           <BarChart data={data} margin={{ left: -15, right: 5, top: 5, bottom: 0 }} barSize={18}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" vertical={false} />
-            <XAxis dataKey="date" tick={{ fill: '#6b7280', fontSize: 10 }} axisLine={false} tickLine={false} />
-            <YAxis domain={[0, 100]} tick={{ fill: '#6b7280', fontSize: 10 }} axisLine={false} tickLine={false} />
-            <Tooltip {...tooltipStyle} cursor={{ fill: 'rgba(255,255,255,0.04)' }} />
-            <ReferenceLine y={50} stroke="#374151" strokeDasharray="3 3" />
-            <Bar dataKey="score" radius={[3, 3, 0, 0]}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#f0e4ff" vertical={false} />
+            <XAxis dataKey="date" tick={{ fill: '#b09ac0', fontSize: 10 }} axisLine={false} tickLine={false} />
+            <YAxis domain={[0, 100]} tick={{ fill: '#b09ac0', fontSize: 10 }} axisLine={false} tickLine={false} />
+            <Tooltip {...tooltipStyle} cursor={{ fill: 'rgba(224,64,251,0.05)' }} />
+            <ReferenceLine y={50} stroke="#f0e4ff" strokeDasharray="3 3" />
+            <Bar dataKey="score" radius={[4, 4, 0, 0]}>
               {data.map((d, i) => (
-                <Cell key={i} fill={scoreColor(d.score)} fillOpacity={0.85} />
+                <Cell key={i} fill={scoreColor(d.score)} fillOpacity={0.9} />
               ))}
             </Bar>
           </BarChart>
@@ -131,21 +132,21 @@ function TrendCard({ weekData, monthData, yearData }) {
           <AreaChart data={data} margin={{ left: -15, right: 5, top: 5, bottom: 0 }}>
             <defs>
               <linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#7c3aed" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#7c3aed" stopOpacity={0} />
+                <stop offset="5%" stopColor="#ff5f1f" stopOpacity={0.2} />
+                <stop offset="95%" stopColor="#e040fb" stopOpacity={0.02} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" vertical={false} />
-            <XAxis dataKey="date" tick={{ fill: '#6b7280', fontSize: 10 }} axisLine={false} tickLine={false} />
-            <YAxis domain={[0, 100]} tick={{ fill: '#6b7280', fontSize: 10 }} axisLine={false} tickLine={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="#f0e4ff" vertical={false} />
+            <XAxis dataKey="date" tick={{ fill: '#b09ac0', fontSize: 10 }} axisLine={false} tickLine={false} />
+            <YAxis domain={[0, 100]} tick={{ fill: '#b09ac0', fontSize: 10 }} axisLine={false} tickLine={false} />
             <Tooltip {...tooltipStyle} />
-            <ReferenceLine y={50} stroke="#374151" strokeDasharray="3 3" />
+            <ReferenceLine y={50} stroke="#f0e4ff" strokeDasharray="3 3" />
             <Area
               type="monotone" dataKey="score"
-              stroke="#a78bfa" strokeWidth={2}
+              stroke="#ff5f1f" strokeWidth={2.5}
               fill="url(#trendGrad)"
               dot={false}
-              activeDot={{ r: 4, fill: '#c4b5fd', strokeWidth: 0 }}
+              activeDot={{ r: 4, fill: '#ff5f1f', strokeWidth: 0 }}
             />
           </AreaChart>
         )}
@@ -173,21 +174,21 @@ function Gauge({ score }) {
   const color = scoreColor(score)
   return (
     <svg viewBox="0 0 200 160" className="w-52 h-40 mx-auto">
-      <path d={arc(210, 450)} fill="none" stroke="#374151" strokeWidth="14" strokeLinecap="round" />
+      <path d={arc(210, 450)} fill="none" stroke="#f0e4ff" strokeWidth="14" strokeLinecap="round" />
       <path d={arc(210, end)} fill="none" stroke={color} strokeWidth="14" strokeLinecap="round" />
       <circle cx={nx} cy={ny} r="5" fill={color} />
-      <text x={cx} y={cy + 10} textAnchor="middle" fontSize="28" fontWeight="bold" fill="white">{score?.toFixed(1)}</text>
-      <text x={cx} y={cy + 28} textAnchor="middle" fontSize="10" fill="#9ca3af">allostatic load</text>
+      <text x={cx} y={cy + 10} textAnchor="middle" fontSize="28" fontWeight="bold" fill="#1e0a2e">{score?.toFixed(1)}</text>
+      <text x={cx} y={cy + 28} textAnchor="middle" fontSize="10" fill="#9d7ab5">allostatic load</text>
     </svg>
   )
 }
 
 // ─── Sub-score card ───────────────────────────────────────────────────────────
 const SUB_META = {
-  financial:   { icon: '💸', label: 'Financial',   detail: '/detail/financial' },
-  hrv_sleep:   { icon: '💓', label: 'HRV & Sleep', detail: '/detail/hrv' },
-  behavioral:  { icon: '📱', label: 'Behavioral',  detail: '/detail/behavioral' },
-  self_report: { icon: '🧠', label: 'Self-report', detail: '/detail/self-report' },
+  financial:   { icon: '💸', label: 'Financial',   detail: '/detail/financial', bg: '#fff4ec', accent: '#ff5f1f' },
+  hrv_sleep:   { icon: '💓', label: 'HRV & Sleep', detail: '/detail/hrv',       bg: '#fdf0ff', accent: '#e040fb' },
+  behavioral:  { icon: '📱', label: 'Behavioral',  detail: '/detail/behavioral', bg: '#f0fdf4', accent: '#16a34a' },
+  self_report: { icon: '🧠', label: 'Self-report', detail: '/detail/self-report', bg: '#fffbeb', accent: '#d97706' },
 }
 
 const WEIGHT_TO_PERM = {
@@ -202,29 +203,96 @@ function SubScoreCard({ category, score, navigate, scoreState, permitted }) {
   const color = scoreColor(score)
   if (!permitted) {
     return (
-      <div className="bg-gray-900 rounded-2xl border border-gray-800 p-4 opacity-50">
+      <div className="rounded-2xl p-4 opacity-40"
+        style={{ background: '#faf5ff', border: '1px solid #f0e4ff' }}>
         <div className="flex items-center gap-2 mb-1">
-          <span>{meta.icon}</span><span className="text-xs text-gray-400">{meta.label}</span>
+          <span>{meta.icon}</span>
+          <span className="text-xs" style={{ color: '#555555' }}>{meta.label}</span>
         </div>
-        <p className="text-xs text-gray-600">Not permitted</p>
+        <p className="text-xs" style={{ color: '#888888' }}>Not permitted</p>
       </div>
     )
   }
   return (
     <button
       onClick={() => navigate(meta.detail, { state: scoreState })}
-      className="bg-gray-900 rounded-2xl border border-gray-800 p-4 text-left hover:border-gray-600 transition-colors"
+      className="rounded-2xl p-4 text-left transition-all"
+      style={{ background: meta.bg, border: `1.5px solid ${meta.accent}30` }}
+      onMouseEnter={e => { e.currentTarget.style.boxShadow = `0 4px 16px ${meta.accent}25` }}
+      onMouseLeave={e => { e.currentTarget.style.boxShadow = 'none' }}
     >
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
-          <span>{meta.icon}</span><span className="text-xs text-gray-400">{meta.label}</span>
+          <span>{meta.icon}</span>
+          <span className="text-xs font-medium" style={{ color: '#111111' }}>{meta.label}</span>
         </div>
         <span className="text-lg font-bold" style={{ color }}>{Math.round(score)}</span>
       </div>
-      <div className="h-1.5 bg-gray-800 rounded-full overflow-hidden">
+      <div className="h-1.5 rounded-full overflow-hidden" style={{ background: `${meta.accent}20` }}>
         <div className="h-full rounded-full" style={{ width: `${score}%`, backgroundColor: color }} />
       </div>
     </button>
+  )
+}
+
+// ─── Profile dropdown ─────────────────────────────────────────────────────────
+function ProfileDropdown({ user, onClose, navigate }) {
+  function clearAndRedirect() {
+    Object.values(STORAGE_KEYS).forEach(k => localStorage.removeItem(k))
+    navigate('/', { replace: true })
+  }
+
+  function handleDeleteAccount() {
+    if (window.confirm('Delete your account? All local data will be removed.')) {
+      clearAndRedirect()
+    }
+  }
+
+  return (
+    <>
+      <div className="fixed inset-0 z-40" onClick={onClose} />
+      <div className="absolute right-0 top-10 z-50 w-64 bg-white rounded-2xl overflow-hidden"
+        style={{ border: '1px solid #f0e4ff', boxShadow: '0 8px 32px rgba(140,60,200,0.18)' }}>
+
+        <div className="px-4 py-4" style={{ borderBottom: '1px solid #f0e4ff' }}>
+          <p className="text-sm font-bold truncate" style={{ color: '#111111' }}>{user?.contact || 'User'}</p>
+          {user?.birthYear && (
+            <p className="text-xs mt-0.5" style={{ color: '#555555' }}>
+              Born {user.birthMonth ? `${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][user.birthMonth-1]} ` : ''}{user.birthYear}
+            </p>
+          )}
+        </div>
+
+        <div className="py-2">
+          {[
+            { icon: '🔒', label: 'Manage permissions', action: () => { onClose(); navigate('/permissions') } },
+            { icon: '📡', label: 'Data sources',        action: () => { onClose(); navigate('/sources') } },
+          ].map(({ icon, label, action }) => (
+            <button key={label} onClick={action}
+              className="w-full px-4 py-3 text-left text-sm flex items-center gap-3 transition-colors hover:bg-plum-50"
+              style={{ color: '#111111' }}
+            >
+              <span>{icon}</span> {label}
+            </button>
+          ))}
+          <div style={{ borderTop: '1px solid #f0e4ff', margin: '4px 0' }} />
+          <button onClick={clearAndRedirect}
+            className="w-full px-4 py-3 text-left text-sm flex items-center gap-3 transition-colors hover:bg-plum-50"
+            style={{ color: '#111111' }}
+          >
+            <span>🚪</span> Sign out
+          </button>
+          <button onClick={handleDeleteAccount}
+            className="w-full px-4 py-3 text-left text-sm flex items-center gap-3 transition-colors"
+            style={{ color: '#e11d48' }}
+            onMouseEnter={e => e.currentTarget.style.background = '#fff0f3'}
+            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+          >
+            <span>🗑️</span> Delete account
+          </button>
+        </div>
+      </div>
+    </>
   )
 }
 
@@ -240,12 +308,20 @@ function bandLabel(band) {
   return { low: 'Low', moderate: 'Moderate', high: 'High', severe: 'Severe' }[band] || '–'
 }
 
+const BAND_STYLES = {
+  low:      { bg: '#f0fdf4', border: '#86efac', text: '#16a34a' },
+  moderate: { bg: '#fffbeb', border: '#fde68a', text: '#d97706' },
+  high:     { bg: '#fff4ec', border: '#fdba74', text: '#ea580c' },
+  severe:   { bg: '#fff0f3', border: '#fca5a5', text: '#dc2626' },
+}
+
 export default function HomePage() {
   const navigate = useNavigate()
   const [scoreData, setScoreData] = useState(null)
   const [scoreState, setScoreState] = useState(null)
   const [trendBase, setTrendBase] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [showProfile, setShowProfile] = useState(false)
   const permissions = getPermissions()
   const weights = getWeights()
 
@@ -279,7 +355,6 @@ export default function HomePage() {
     }
   }, [])
 
-  // Generate all three trend datasets once, when base score is known
   const weekData  = useMemo(() => trendBase ? syntheticWeek(trendBase)  : [], [trendBase])
   const monthData = useMemo(() => trendBase ? syntheticMonth(trendBase) : [], [trendBase])
   const yearData  = useMemo(() => trendBase ? syntheticYear(trendBase)  : [], [trendBase])
@@ -289,51 +364,62 @@ export default function HomePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
-        <p className="text-gray-500 text-sm">Loading your summary…</p>
+      <div className="min-h-screen bg-cream-100 flex items-center justify-center">
+        <p className="text-sm" style={{ color: '#555555' }}>Loading your summary…</p>
       </div>
     )
   }
 
   const r = scoreData
-  const bandColors = {
-    low:      { bg: 'bg-green-900/30',  border: 'border-green-700',  text: 'text-green-400'  },
-    moderate: { bg: 'bg-yellow-900/30', border: 'border-yellow-700', text: 'text-yellow-400' },
-    high:     { bg: 'bg-orange-900/30', border: 'border-orange-700', text: 'text-orange-400' },
-    severe:   { bg: 'bg-red-900/30',    border: 'border-red-700',    text: 'text-red-400'    },
-  }
-  const band = bandColors[r.band] || bandColors.moderate
+  const band = BAND_STYLES[r.band] || BAND_STYLES.moderate
 
   return (
-    <div className="min-h-screen bg-gray-950 py-8 px-4 pb-24">
+    <div className="min-h-screen bg-cream-100 py-8 px-4 pb-24">
       <div className="max-w-2xl mx-auto">
 
-        {/* Greeting */}
-        <div className="mb-6">
-          <h1 className="text-xl font-bold text-white">{user ? 'Hello 👋' : 'MannChill'}</h1>
-          <p className="text-gray-500 text-sm">Here's your stress summary</p>
+        {/* Greeting + profile */}
+        <div className="flex items-center justify-between mb-6 relative">
+          <div>
+            <h1 className="text-xl font-bold" style={{ color: '#111111' }}>
+              {user ? `Hello, ${user.contact?.split('@')[0] || user.contact} 👋` : 'MannChill 🧘'}
+            </h1>
+            <p className="text-sm" style={{ color: '#555555' }}>Here's your stress summary</p>
+          </div>
+          <button
+            onClick={() => setShowProfile(p => !p)}
+            className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold transition-all"
+            style={{ background: 'linear-gradient(135deg, #ff5f1f, #e040fb)', boxShadow: '0 4px 12px rgba(255,95,31,0.35)' }}
+          >
+            {user?.contact?.[0]?.toUpperCase() || '👤'}
+          </button>
+          {showProfile && (
+            <ProfileDropdown user={user} onClose={() => setShowProfile(false)} navigate={navigate} />
+          )}
         </div>
 
         {/* Main score card */}
-        <div className={`rounded-2xl border p-6 mb-4 text-center ${band.bg} ${band.border}`}>
+        <div className="rounded-2xl p-6 mb-4 text-center"
+          style={{ background: band.bg, border: `1.5px solid ${band.border}`, boxShadow: '0 2px 16px rgba(0,0,0,0.06)' }}>
           <Gauge score={r.allostatic_load} />
-          <div className={`inline-block mt-2 px-4 py-1 rounded-full text-sm font-semibold border ${band.bg} ${band.border} ${band.text}`}>
+          <div className="inline-block mt-2 px-4 py-1.5 rounded-full text-sm font-bold"
+            style={{ background: '#ffffff', color: band.text, border: `1.5px solid ${band.border}` }}>
             {bandLabel(r.band)} — {r.k6_equivalent}
           </div>
-          <p className="text-gray-400 text-xs mt-2">
-            Primary stressor: <span className="text-white font-medium">{r.dominant_stressor?.replace('_', ' ')}</span>
+          <p className="text-xs mt-2" style={{ color: '#555555' }}>
+            Primary stressor: <span className="font-semibold" style={{ color: '#111111' }}>{r.dominant_stressor?.replace('_', ' ')}</span>
           </p>
         </div>
 
         {/* Spectrum bar */}
-        <div className="bg-gray-900 rounded-2xl border border-gray-800 p-4 mb-4">
-          <p className="text-xs text-gray-500 mb-2">Stress spectrum</p>
-          <div className="relative h-3 rounded-full overflow-hidden"
+        <div className="bg-white rounded-2xl p-4 mb-4"
+          style={{ boxShadow: '0 2px 12px rgba(0,0,0,0.05)', border: '1px solid #f0e4ff' }}>
+          <p className="text-xs mb-2 font-medium" style={{ color: '#555555' }}>Stress spectrum</p>
+          <div className="relative h-4 rounded-full overflow-hidden"
             style={{ background: 'linear-gradient(to right, #4ade80, #facc15, #fb923c, #f87171)' }}>
-            <div className="absolute top-0 w-3 h-3 bg-white rounded-full shadow-lg"
-              style={{ left: `calc(${r.allostatic_load}% - 6px)` }} />
+            <div className="absolute top-0.5 w-3 h-3 bg-white rounded-full shadow-md"
+              style={{ left: `calc(${r.allostatic_load}% - 6px)`, boxShadow: '0 0 6px rgba(0,0,0,0.3)' }} />
           </div>
-          <div className="flex justify-between text-xs text-gray-600 mt-1">
+          <div className="flex justify-between text-xs mt-1.5" style={{ color: '#888888' }}>
             <span>Low</span><span>Moderate</span><span>High</span><span>Severe</span>
           </div>
         </div>
@@ -345,7 +431,7 @@ export default function HomePage() {
 
         {/* Sub-score cards */}
         <div className="mb-4">
-          <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-3">Score breakdown</h2>
+          <h2 className="text-sm font-semibold uppercase tracking-wider mb-3" style={{ color: '#555555' }}>Score breakdown</h2>
           <div className="grid grid-cols-2 gap-3">
             {Object.keys(SUB_META).map(cat => (
               <SubScoreCard
@@ -362,25 +448,28 @@ export default function HomePage() {
 
         {/* Accuracy disclaimer */}
         {unpermittedCount > 0 && (
-          <div className="bg-yellow-900/20 border border-yellow-800/40 rounded-2xl p-4 mb-4">
-            <p className="text-xs text-yellow-300/80 leading-relaxed">
+          <div className="rounded-2xl p-4 mb-4"
+            style={{ background: '#fffbeb', border: '1px solid #fde68a' }}>
+            <p className="text-xs leading-relaxed" style={{ color: '#92400e' }}>
               <span className="font-semibold">Improve accuracy:</span> {unpermittedCount} data source{unpermittedCount > 1 ? 's are' : ' is'} not permitted.
-              Enabling them gives the model more signal and increases score precision.{' '}
-              <button onClick={() => navigate('/sources')} className="underline text-yellow-300">Manage permissions</button>
+              Enabling them gives the model more signal.{' '}
+              <button onClick={() => navigate('/sources')} className="underline font-semibold" style={{ color: '#d97706' }}>
+                Manage permissions
+              </button>
             </p>
           </div>
         )}
 
         {/* Top nudge */}
         {r.nudges?.length > 0 && (
-          <div className="bg-gray-900 rounded-2xl border border-purple-900/50 p-5 mb-4">
-            <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-3">Top nudge</h2>
+          <div className="bg-white rounded-2xl p-5 mb-4"
+            style={{ border: '1.5px solid #fdd0b0', boxShadow: '0 2px 16px rgba(255,95,31,0.1)' }}>
+            <h2 className="text-sm font-semibold uppercase tracking-wider mb-3" style={{ color: '#ff5f1f' }}>Top nudge 💡</h2>
             <div className="flex items-start gap-3">
-              <span className="text-xl">💡</span>
               <div>
-                <p className="text-sm text-gray-200 leading-relaxed">{r.nudges[0].message_en}</p>
+                <p className="text-sm leading-relaxed" style={{ color: '#111111' }}>{r.nudges[0].message_en}</p>
                 {r.nudges[0].message_ne && (
-                  <p className="text-xs text-gray-500 mt-1">{r.nudges[0].message_ne}</p>
+                  <p className="text-xs mt-1" style={{ color: '#555555' }}>{r.nudges[0].message_ne}</p>
                 )}
               </div>
             </div>
@@ -388,19 +477,21 @@ export default function HomePage() {
         )}
 
         {/* Quick actions */}
-        <div className="bg-gray-900 rounded-2xl border border-gray-800 p-5 mb-4">
-          <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-3">Quick actions</h2>
+        <div className="bg-white rounded-2xl p-5 mb-4"
+          style={{ boxShadow: '0 2px 12px rgba(0,0,0,0.06)', border: '1px solid #f0e4ff' }}>
+          <h2 className="text-sm font-semibold uppercase tracking-wider mb-3" style={{ color: '#555555' }}>Quick actions</h2>
           <div className="grid grid-cols-2 gap-2">
             {[
-              { label: '📊 Get new score',  path: '/intake' },
-              { label: '🔮 Run what-if',    path: '/scenario' },
-              { label: '🤝 View resources', path: `/resources/${r.band}` },
-              { label: '✅ Weekly routine', path: '/routine' },
-            ].map(({ label, path }) => (
+              { label: '📊 Get new score',  path: '/intake',                  bg: '#fff4ec', color: '#ff5f1f' },
+              { label: '🔮 Run what-if',    path: '/scenario',                bg: '#fdf0ff', color: '#9333ea' },
+              { label: '🤝 View resources', path: `/resources/${r.band}`,     bg: '#f0fdf4', color: '#16a34a' },
+              { label: '✅ Weekly routine', path: '/routine',                  bg: '#fffbeb', color: '#d97706' },
+            ].map(({ label, path, bg, color }) => (
               <button
                 key={path}
                 onClick={() => navigate(path, { state: scoreState })}
-                className="py-2.5 px-3 rounded-xl border border-gray-700 text-gray-300 hover:bg-gray-800 transition-colors text-sm text-left"
+                className="py-3 px-3 rounded-xl text-sm text-left font-medium transition-all"
+                style={{ background: bg, color }}
               >
                 {label}
               </button>

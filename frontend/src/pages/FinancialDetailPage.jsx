@@ -4,12 +4,12 @@ import { scoreColor } from '../utils/colors'
 
 function StatRow({ label, value, highlight, note }) {
   return (
-    <div className="flex items-start justify-between py-3 border-b border-gray-800 last:border-0">
+    <div className="flex items-start justify-between py-3 border-b border-gray-100 last:border-0">
       <div>
-        <p className="text-sm text-gray-300">{label}</p>
-        {note && <p className="text-xs text-gray-600 mt-0.5">{note}</p>}
+        <p className="text-sm text-gray-700">{label}</p>
+        {note && <p className="text-xs text-gray-800 mt-0.5">{note}</p>}
       </div>
-      <span className={`text-sm font-semibold ml-4 ${highlight ? 'text-red-400' : 'text-white'}`}>{value}</span>
+      <span className={`text-sm font-semibold ml-4 ${highlight ? 'text-red-600' : 'text-gray-900'}`}>{value}</span>
     </div>
   )
 }
@@ -39,24 +39,24 @@ export default function FinancialDetailPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-950 py-10 px-4">
+    <div className="min-h-screen bg-cream-100 py-10 px-4">
       <div className="max-w-2xl mx-auto">
 
         <div className="text-center mb-8">
           <div className="text-3xl mb-2">💸</div>
-          <h1 className="text-2xl font-bold text-white mb-1">Financial Stress</h1>
-          <p className="text-gray-500 text-xs">Remittance burden & debt load</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-1">Financial Stress</h1>
+          <p className="text-gray-700 text-xs">Remittance burden & debt load</p>
           {score !== undefined && (
-            <div className="mt-2 inline-block px-3 py-1 rounded-full bg-gray-800 text-gray-300 text-xs">
+            <div className="mt-2 inline-block px-3 py-1 rounded-full bg-white text-gray-700 text-xs">
               Sub-score: <span className="font-semibold" style={{ color: scoreColor(score) }}>{Math.round(score)}/100</span> stress load
             </div>
           )}
         </div>
 
         {/* Remittance chart */}
-        <div className="bg-gray-900 rounded-2xl border border-gray-800 p-6 mb-6">
-          <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-1">Income breakdown</h2>
-          <p className="text-xs text-gray-500 mb-4">Monthly income: <span className="text-white">${income.toLocaleString()}</span></p>
+        <div className="bg-white rounded-2xl border border-gray-100 p-6 mb-6">
+          <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-1">Income breakdown</h2>
+          <p className="text-xs text-gray-700 mb-4">Monthly income: <span className="text-gray-900">${income.toLocaleString()}</span></p>
           <ResponsiveContainer width="100%" height={120}>
             <BarChart data={chartData} layout="vertical" margin={{ left: 10, right: 30, top: 0, bottom: 0 }}>
               <XAxis type="number" tick={{ fill: '#6b7280', fontSize: 10 }} tickFormatter={v => `$${v}`} />
@@ -82,8 +82,8 @@ export default function FinancialDetailPage() {
         </div>
 
         {/* Stats */}
-        <div className="bg-gray-900 rounded-2xl border border-gray-800 p-5 mb-6">
-          <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-2">Key figures</h2>
+        <div className="bg-white rounded-2xl border border-gray-100 p-5 mb-6">
+          <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-2">Key figures</h2>
           <StatRow label="Monthly remittance" value={`$${remittance.toLocaleString()}`} />
           <StatRow label="Remittance as % of income" value={`${remittancePct}%`} highlight={remittanceHigh}
             note={remittanceHigh ? 'Above 15% sustainable threshold' : 'Within sustainable range'} />
@@ -94,15 +94,15 @@ export default function FinancialDetailPage() {
         </div>
 
         {/* Cultural note */}
-        <div className="bg-gray-900 rounded-2xl border border-yellow-900/50 p-5 mb-8">
-          <p className="text-xs text-yellow-300/80 leading-relaxed">
+        <div className="bg-white rounded-2xl border border-yellow-900/50 p-5 mb-8">
+          <p className="text-xs text-yellow-700 leading-relaxed">
             <span className="font-semibold">इज्जत (Izzat) note:</span> Remittance obligations are a deeply
             important part of family honor for Nepali diaspora. These figures are for awareness, not judgement.
             View resources for culturally-grounded guidance on sustainable limits.
           </p>
         </div>
 
-        <button onClick={() => navigate(-1)} className="w-full py-3 rounded-xl border border-gray-700 text-gray-300 hover:bg-gray-800 transition-colors text-sm">
+        <button onClick={() => navigate(-1)} className="w-full py-3 rounded-xl border border-gray-200 text-gray-700 hover:bg-white transition-colors text-sm">
           ← Back
         </button>
 
