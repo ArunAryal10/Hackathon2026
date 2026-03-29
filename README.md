@@ -86,6 +86,11 @@ Load synthetic data without any real input — use the demo toggle on the home p
 
 Built at Hackathon 2026.
 
+| Name | Role |
+|------|------|
+| **Sudan Duwadi** | Full-stack — Landing, Onboarding, Login, Permissions, Calibration, Home page, Data Sources (Pages 1–6); backend scoring engine, API routers, WHOOP integration |
+| **Arun Aryal** | Full-stack — HRV & Sleep detail, Financial detail, Behavioral detail, Self-Report/Journal, Routine Builder, Nudges & Resources (Pages 7–12); backend subscorers, demo data, voice journal |
+
 ---
 
 ## Privacy Policy
