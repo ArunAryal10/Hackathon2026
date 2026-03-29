@@ -73,12 +73,22 @@ App will be available at `http://localhost:5173`.
 | Variable | Required | Description |
 |----------|----------|-------------|
 | `GEMINI_API_KEY` | Yes (voice journal) | Google Gemini API key for voice analysis |
+| `WHOOP_CLIENT_ID` | Optional | WHOOP OAuth client ID |
+| `WHOOP_CLIENT_SECRET` | Optional | WHOOP OAuth client secret |
 
 ### Demo profiles
 
 Load synthetic data without any real input — use the demo toggle on the home page to switch between:
 - **Profile A** — high stress (freelance income, heavy remittance burden, poor sleep/HRV)
 - **Profile B** — moderate stress (stable employment, moderate remittance, better health metrics)
+
+## Tech Stack
+
+| Layer | Tech |
+|-------|------|
+| Backend | FastAPI, Python 3.11, NumPy, Pandas |
+| Frontend | React 19, Vite, Tailwind CSS, Recharts |
+| Integrations | WHOOP API (HRV/sleep/strain), Google Gemini (voice analysis) |
 
 ---
 
