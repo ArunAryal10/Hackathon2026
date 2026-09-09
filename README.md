@@ -1,5 +1,18 @@
 # MannChill — मनशान्ति
 
+![Health-AI](https://img.shields.io/badge/Health-AI-2ea44f)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
+![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=black)
+![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)
+![WHOOP](https://img.shields.io/badge/Integration-WHOOP-black)
+
+**Tech stack**
+
+- **Backend:** FastAPI · Pydantic · NumPy · pandas · Google Gemini (voice-journal analysis) · WHOOP API. Modular scoring engine with independent sub-scorers for financial, HRV/sleep, and behavioral load, plus a nudge generator.
+- **Frontend:** React · Vite · React Router · Recharts (stress-spectrum gauges and dimension charts) · Axios.
+- **Architecture:** REST API (routers for `score`, `scenario`, `voice`, `whoop`, `resources`, `demo`) feeding a 12-page React SPA; state persisted per-session, wearable tokens held only for the session.
+
+
 A stress-awareness tool built for the Nepali diaspora.
 
 MannChill measures allostatic load, which is the cumulative cost of chronic stress across financial, physical, behavioral, and self-reported dimensions. It surfaces actionable nudges adapted to the cultural realities of Nepali life abroad.
